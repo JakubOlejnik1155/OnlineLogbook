@@ -14,10 +14,6 @@ class App extends Component {
     if (window.location.href === 'http://localhost:3000/' || window.location.href === 'http://192.168.1.11:3000/')
       window.history.pushState("object or string", "Title", "/login");
   }
-  handleRestorePass = () => {
-    const restorepassSection = document.querySelector('.resetPasswordContainer');
-    restorepassSection.classList.toggle('resetPasswordContainer--active');
-  }
   render(){
     return (
       <Router basename={process.env.PUBLIC_URL}>

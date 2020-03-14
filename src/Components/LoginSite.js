@@ -13,14 +13,12 @@ const LoginSite = () => {
                     <img className="logo__image" src={Logo} alt="logo" />
                 </div>
                 <div className="formsPlusChanegeSection">
-                    <div className="formsContainer">
                         <div className="formsContainer__loginForm">
                             <Header
                                 mainText="Sign in to online logbook"
                                 secondaryText="or use your email account:" />
                             <LoginForm />
                         </div>
-                    </div>
                     <div className="changeSection">
                         <ChangeSection
                             message="If your do not have an account, enter your personal details and start your cruise with us."
