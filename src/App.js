@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
+import BadPath from './Components/BadPath';
+import LoginSite from './Components/LoginSite';
+import RegistrationSite from './Components/RegistrationSite';
+import './style/App.scss';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+class App extends Component {
+  //@TODO ==> changing locations in componentDidMount before build production version
+  componentDidMount() {
+    if (window.location.href === 'http://localhost:3000/' || window.location.href === 'http://192.168.1.11:3000/')
+      window.history.pushState("object or string", "Title", "/login");
+  }
+  handleRestorePass = () => {
+    const restorepassSection = document.querySelector('.resetPasswordContainer');
+    restorepassSection.classList.toggle('resetPasswordContainer--active');
+  }
+  render(){
+    return (
+      <Router basename={process.env.PUBLIC_URL}>
+        <Switch>
+          <Route path="/" exact component={LoginSite} />
+          <Route path="/login" exact component={LoginSite}/>
+          <Route path ="/registration" exact component={RegistrationSite}/>
+          <Route component={BadPath} />
+        </Switch>
+      </Router>
+    );
+  }
 }
 
 export default App;

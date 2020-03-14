@@ -1,0 +1,32 @@
+@import './variables.scss';
+.changeSection{
+    margin: 0px auto 20px auto;
+}
+.changeMessage{
+    text-align: center;
+    width: 70%;
+    margin: 0 auto;
+    font-size: 14px;
+    font-weight: 100;
+    letter-spacing: $mainSpacing + 0.025em;
+    color: $mainTextColor;
+}
+.changeSection__button{
+        display: block;
+        margin: 0 auto;
+        margin-top: 10px;
+        height: 32px;
+        width: 155px;
+        border: none;
+        border-radius: 50px;
+        background-image: $buttonColorGradient;
+        text-transform: uppercase;
+        font-size: $smallMobile;
+        font-weight: 100;
+        color: white;
+        letter-spacing: $mainSpacing;
+        outline: none;
+        text-decoration: none;
+        text-align: center;
+        line-height: 32px;
+    }
