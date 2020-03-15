@@ -29,4 +29,17 @@
         text-decoration: none;
         text-align: center;
         line-height: 32px;
+        background-size: 300% 100%;
+        -moz-transition: all .4s ease-in-out;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .4s ease-in-out;
+        &:hover {
+            cursor: pointer;
+            background-position: 100% 0;
+            -moz-transition: all .4s ease-in-out;
+            -o-transition: all .4s ease-in-out;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+        }
     }

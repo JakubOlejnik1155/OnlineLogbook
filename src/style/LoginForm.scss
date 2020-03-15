@@ -93,6 +93,20 @@
     margin: 0 auto 10px auto;
     outline: none;
     background-image: $buttonColorGradient;
+    background-size: 300% 100%;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+    &:hover {
+        cursor: pointer;
+        background-position: 100% 0;
+        -moz-transition: all .4s ease-in-out;
+        -o-transition: all .4s ease-in-out;
+        -webkit-transition: all .4s ease-in-out;
+        transition: all .4s ease-in-out;
+    }
 }
 //animations
 .inputContainer input:focus + .inputContainer__label .labelContent,
