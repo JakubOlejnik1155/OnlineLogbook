@@ -1,5 +1,5 @@
 @import './variables.scss';
-
+@import './mediaQuerys.scss';
 *{
     font-family: $mainFont;
     margin: 0;
@@ -8,12 +8,15 @@
 }
 .wrapper{
     width: 100%;
-    overflow: hidden;
+   // overflow: hidden;
 }
 .formsPlusChanegeSection{
-    min-height: calc(100vh - 38px);
+    min-height: calc(100vh);
     display: flex;
     flex-direction: column;
+    @include MQ (tablet-large){
+        flex-direction: row;
+    }
     .formsContainer__loginForm,
     .formsContainer__registrationForm
     {
@@ -25,9 +28,20 @@
         display: flex;
         transform: translateX(0);
         transition: transform .7s linear;
+         @include MQ (tablet-large){
+            width: auto;
+         }
     }
     .changeSection{
         flex-grow: 1;
+         @include MQ (tablet-large){
+            flex-basis: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0;
+            background-image: $mainColorGradient;
+        }
     }
 }
 .forgotPassword{

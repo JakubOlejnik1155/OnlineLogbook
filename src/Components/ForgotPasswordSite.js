@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import Logo from '../images/logo-white.svg';
 import '../style/ForgotPasswordSite.scss';
+import { Icon } from '@iconify/react';
+import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
 
 const ForgotPasswordSite = () => {
 
@@ -28,7 +30,7 @@ const ForgotPasswordSite = () => {
                         <div className="forgotPasswordForm__inputContainer inputContainer">
                             <input className="inputContainer__input" type="text" name="emailForgetPassword" id="emailForgetPassword" value={email} onChange={handleEmailInputChange} required />
                             <label htmlFor="emailForgetPassword" className="inputContainer__label">
-                                <span className="labelContent">email</span>
+                                <span className="labelContent"><Icon className="ForgotPassword-labelIcon" icon={baselineAlternateEmail} />Email</span>
                             </label>
                         </div>
 

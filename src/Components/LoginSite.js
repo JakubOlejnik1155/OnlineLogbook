@@ -15,7 +15,7 @@ const LoginSite = () => {
                 <div className="formsPlusChanegeSection">
                         <div className="formsContainer__loginForm">
                             <Header
-                                mainText="Sign in to online logbook"
+                                mainText="Sign in to e-logbook"
                                 secondaryText="or use your email account:" />
                             <LoginForm />
                         </div>

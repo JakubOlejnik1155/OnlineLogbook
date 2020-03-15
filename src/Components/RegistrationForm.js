@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import '../style/RegistrationForm.scss';
+import { Icon } from '@iconify/react';
+import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
+import bxLockOpen from '@iconify/icons-bx/bx-lock-open';
 class RegistrationForm extends Component {
     state = {
         email: '',
@@ -22,19 +25,19 @@ class RegistrationForm extends Component {
                     <div className="registrationForm__inputContainer inputContainer">
                         <input className="inputContainer__input" type="text" name="emailRegistration" id="emailRegistration" value={this.state.email} onChange={this.handleRegistrationEmail} required />
                         <label htmlFor="emailRegistration" className="inputContainer__label">
-                            <span className="labelContent">email</span>
+                            <span className="labelContent"> <Icon className="labelIcon" icon={baselineAlternateEmail} />Email</span>
                         </label>
                     </div>
                     <div className="registrationForm__inputContainer inputContainer">
                         <input className="inputContainer__input" type="password" name="passwordRegistration" id="passwordRegistration" value={this.state.password} onChange={this.handleRegistrationPassword} required />
                         <label htmlFor="passwordRegistration" className="inputContainer__label">
-                            <span className="labelContent">password</span>
+                            <span className="labelContent"><Icon className="labelIcon" icon={bxLockOpen} />Password</span>
                         </label>
                     </div>
                     <div className="registrationForm__inputContainer inputContainer">
                         <input className="inputContainer__input" type="password" name="passwordRegistrationConfirm" id="passwordRegistrationConfirm" value={this.state.passwordConfirm} onChange={this.handleRegistrationPasswordConfirm} required />
                         <label htmlFor="passwordRegistrationConfirm" className="inputContainer__label">
-                            <span className="labelContent">confirm password</span>
+                            <span className="labelContent"><Icon className="labelIcon" icon={bxLockOpen} />Confirm password</span>
                         </label>
                     </div>
                     <button className="registrationForm__SignUpButton" type="submit">Sign Up</button>
