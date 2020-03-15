@@ -36,7 +36,7 @@ const ForgotPasswordSite = () => {
 
                         <button className="registrationForm__SignUpButton" type="submit">send</button>
                     </form>
-            <Link to="/login" className="backToLogin"> Back to Sign In page</Link>
+                    <p className="LinkContainer"><Link to="/login" className="backToLogin"> Back to Sign In page</Link></p>
             </div>
         </div>
         </>
