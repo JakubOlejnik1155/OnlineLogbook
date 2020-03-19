@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
+//@TODO
+//styling to bad path route
 const BadPath = () => {
     return (
         <div >
@@ -13,6 +15,6 @@ const BadPath = () => {
             </div>
         </div >
      );
-}
+};
 
 export default BadPath;

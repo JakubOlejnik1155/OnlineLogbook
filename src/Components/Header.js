@@ -16,6 +16,6 @@ const LoginHeader = (props) => {
             <h3 className="welcomeSection__secondaryText">{props.secondaryText}</h3>
         </div>
     );
-}
+};
 
 export default LoginHeader;

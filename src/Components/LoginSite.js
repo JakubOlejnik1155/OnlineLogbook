@@ -30,6 +30,6 @@ const LoginSite = () => {
             </div>
         </>
      );
-}
+};
 
 export default LoginSite;

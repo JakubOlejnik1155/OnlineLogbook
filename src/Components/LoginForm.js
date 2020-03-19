@@ -1,31 +1,25 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import '../style/LoginForm.scss';
 import { Icon } from '@iconify/react';
 import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
 import bxLockOpen from '@iconify/icons-bx/bx-lock-open';
 
-class LoginForm extends Component {
-    state = {
-        email: '',
-        password: ''
-    }
-    handleLoginEmail = (event) => {
-        this.setState({
-            email: event.target.value,
-        });
-    }
-    handleLoginPassword = (event) => {
-        this.setState({
-            password: event.target.value
-        });
-    }
-    render() {
+const LoginForm = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLoginEmail = (event) => {
+        setEmail(event.target.value);
+    };
+    const handleLoginPassword = (event) => {
+        setPassword(event.target.value);
+    };
         return (
             <>
                 <form className="loginForm">
                     <div className="loginForm__inputContainer inputContainer">
-                        <input className="inputContainer__input" type="text" name="email" id="emialLogin" value={this.state.email} onChange={this.handleLoginEmail} required />
+                        <input className="inputContainer__input" type="text" name="email" id="emialLogin" value={email} onChange={handleLoginEmail} required />
                         <label htmlFor="email" className="inputContainer__label">
                             <span className="labelContent">
                                 <Icon className="labelIcon" icon={baselineAlternateEmail} />
@@ -34,7 +28,7 @@ class LoginForm extends Component {
                         </label>
                     </div>
                     <div className="loginForm__inputContainer inputContainer">
-                        <input className="inputContainer__input" type="password" name="password" id="password" value={this.state.password} onChange={this.handleLoginPassword} required />
+                        <input className="inputContainer__input" type="password" name="password" id="password" value={password} onChange={handleLoginPassword} required />
                         <label htmlFor="password" className="inputContainer__label">
                             <span className="labelContent" >
                                 <Icon className="labelIcon" icon={bxLockOpen} />
@@ -47,7 +41,6 @@ class LoginForm extends Component {
                 </form>
             </>
         );
-    }
-}
+};
 
 export default LoginForm;

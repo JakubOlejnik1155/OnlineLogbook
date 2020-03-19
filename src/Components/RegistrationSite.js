@@ -31,6 +31,6 @@ const RegistrationSite = () => {
           </div>
         </>
      );
-}
+};
 
 export default RegistrationSite;

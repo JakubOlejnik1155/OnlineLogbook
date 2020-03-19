@@ -9,6 +9,6 @@ const ChangeSection = (props) => {
             <Link to={props.path}className="changeSection__button">{props.btnText}</Link>
         </div>
     );
-}
+};
 
 export default ChangeSection;
