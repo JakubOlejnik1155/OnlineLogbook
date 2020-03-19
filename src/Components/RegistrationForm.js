@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../style/RegistrationForm.scss';
 import { Icon } from '@iconify/react';
+import connection from '../connections';
 import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
 import bxLockOpen from '@iconify/icons-bx/bx-lock-open';
 class RegistrationForm extends Component {
@@ -9,19 +10,52 @@ class RegistrationForm extends Component {
         password: '',
         passwordConfirm: '',
     }
-    handleRegistrationEmail=(event)=>{
+    handleRegistrationEmail = (event) => {
         this.setState({ email: event.target.value });
     }
-    handleRegistrationPassword=(event)=>{
+    handleRegistrationPassword = (event) => {
         this.setState({ password: event.target.value });
     }
-    handleRegistrationPasswordConfirm =(event)=>{
+    handleRegistrationPasswordConfirm = (event) => {
         this.setState({ passwordConfirm: event.target.value });
     }
+    //@TODO
+    //Client site data validation!!!!
+    handleRegisterFormSubmition = (event) => {
+        event.preventDefault();
+        const { email, password, passwordConfirm } = this.state;
+        const data = {
+            email: email,
+            password: password,
+            passwordConfirm: passwordConfirm
+        };
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        };
+        fetch(connection.address.concat("/api/user/register"), options)
+            .then(response => {
+                if (response.ok)
+                    return response;
+                throw Error(response.status.toString());
+            })
+            .then(res => res.json())
+            .then(data => {
+                //error message handling!!!!!
+                console.log(data);
+            })
+            .catch(error => {
+                //wrong address 404 exception handling
+                console.log("error => ", error);
+            })
+    };
     render() {
         return (
             <>
-                <form className="registrationForm">
+                <form className="registrationForm" method="POST" onSubmit={this.handleRegisterFormSubmition}>
                     <div className="registrationForm__inputContainer inputContainer">
                         <input className="inputContainer__input" type="text" name="emailRegistration" id="emailRegistration" value={this.state.email} onChange={this.handleRegistrationEmail} required />
                         <label htmlFor="emailRegistration" className="inputContainer__label">

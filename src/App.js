@@ -6,9 +6,6 @@ import RegistrationSite from './Components/RegistrationSite';
 import ForgotPasswordSite from './Components/ForgotPasswordSite';
 import './style/App.scss';
 
-
-
-
 //class App extends Component {
 const App =  () => {
 
