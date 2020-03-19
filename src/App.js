@@ -10,14 +10,20 @@ import './style/App.scss';
 
 //class App extends Component {
 const App =  () => {
-    const options = {
+
+    //alert options based on windowWidth
+    let options = {
         timeout: 5000,
-        position: positions.BOTTOM_CENTER
+        position: positions.BOTTOM_LEFT,
     };
-    //@TODO ==> changing locations in componentDidMount before build production version
+    if (window.innerWidth < 1024 ){options.position = positions.TOP_RIGHT;}
+
+
+    //@TODO
+    // changing locations in componentDidMount before build production version
     useEffect(()=>{
-    if (window.location.href === 'http://localhost:3001/' || window.location.href === 'http://192.168.1.14:30001/')
-      window.history.pushState("object or string", "Title", "/login");
+        if (window.location.href === 'http://localhost:3001/' || window.location.href === 'http://192.168.1.14:30001/')
+          window.history.pushState("object or string", "Title", "/login");
     });
     return (
         <Provider template={AlertTemplate} {...options}>

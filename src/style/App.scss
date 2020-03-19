@@ -25,7 +25,6 @@
         display: flex;
         flex-direction: column;
         flex-grow: 3;
-        display: flex;
         transform: translateX(0);
         transition: transform .7s linear;
          @include MQ (tablet-large){
@@ -54,4 +53,14 @@
     z-index: 100;
     display: none;
     transform: translateY(100%);
+}
+#__react-alert__{
+  div>div>div{
+      background-color: rgba(0, 4, 31, 0.81) !important;
+      width: auto !important;
+  }
+  span{
+    text-transform: lowercase;
+    font-size: 16px;
+  }
 }

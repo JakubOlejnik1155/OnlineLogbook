@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useAlert} from "react-alert";
 import '../style/RegistrationForm.scss';
 import { Icon } from '@iconify/react';
 import connection from '../connections';
@@ -10,6 +11,7 @@ const RegistrationForm = () =>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const alert = useAlert();
 
     const handleRegistrationEmail = (event) => {
         setEmail(event.target.value);
@@ -44,12 +46,16 @@ const RegistrationForm = () =>{
             })
             .then(res => res.json())
             .then(data => {
-                //error message handling!!!!!
-                console.log(data);
+                if(data.error){
+                    alert.error( `${data.error}`);
+                    console.error(data.error);
+                }else{
+                    alert.success('your account was created. Check your mailbox!')
+                }
             })
             .catch(error => {
-                //wrong address 404 exception handling
-                console.log("error => ", error);
+                alert.error( `${error}`);
+                console.error(error);
             })
     };
         return (
