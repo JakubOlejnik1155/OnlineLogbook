@@ -50,7 +50,10 @@ const RegistrationForm = () =>{
                     alert.error( `${data.error}`);
                     console.error(data.error);
                 }else{
-                    alert.success('your account was created. Check your mailbox!')
+                    alert.success('your account was created. Check your mailbox!');
+                    setPassword('');
+                    setEmail('');
+                    setPasswordConfirm('');
                 }
             })
             .catch(error => {

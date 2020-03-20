@@ -1,0 +1,24 @@
+@import "variables";
+
+.emailValidationSiteWrapper{
+  width: 100%;
+  height: 100vh;
+  background-image: $mainColorGradient;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__validationMessage{
+    color: white;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 24px;
+    letter-spacing: $mainSpacing;
+    .mainMessage{
+      font-size: 32px;
+    }
+    .secondaryMessage{
+      color: #8d8d8d;
+      font-weight: 100;
+    }
+  }
+}
