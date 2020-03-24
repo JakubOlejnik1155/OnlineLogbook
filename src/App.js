@@ -5,6 +5,7 @@ import LoginSite from './Components/LoginSite';
 import RegistrationSite from './Components/RegistrationSite';
 import ForgotPasswordSite from './Components/ForgotPasswordSite';
 import UserEmailValidation from './Components/UserEmailValidation';
+import SetNewPasswordSite from "./Components/SetNewPasswordSite";
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import './style/App.scss';
@@ -35,6 +36,7 @@ const App =  () => {
               <Route path="/registration" exact component={RegistrationSite} />
               <Route path="/forgotPass" exact component={ForgotPasswordSite}/>
               <Route path="/userValidation" component={UserEmailValidation}/>
+              <Route path="/setNewPassword" component={SetNewPasswordSite} />
               <Route component={BadPath} />
             </Switch>
         </Provider>

@@ -29,7 +29,6 @@ const UserEmailValidation =()=>{
                 }else{
                     alert.success('Your email was verified successfully!!!');
                     setTimeout( ()=>{
-                        console.log('backing to login!!!');
                         window.location.replace(connection.mainSite);
                     },5000);
                 }
