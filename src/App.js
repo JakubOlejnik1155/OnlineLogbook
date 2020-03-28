@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
-import {Switch,Route} from "react-router-dom";
-import BadPath from './Components/BadPath';
-import LoginSite from './Components/LoginSite';
-import RegistrationSite from './Components/RegistrationSite';
-import ForgotPasswordSite from './Components/ForgotPasswordSite';
-import UserEmailValidation from './Components/UserEmailValidation';
-import SetNewPasswordSite from "./Components/SetNewPasswordSite";
+import React, {useContext, useEffect, useState} from 'react';
+import {Switch,Route, Redirect} from "react-router-dom";
+import BadPath from './Components/login/BadPath';
+import LoginSite from './Components/login/LoginSite';
+import RegistrationSite from './Components/login/RegistrationSite';
+import ForgotPasswordSite from './Components/login/ForgotPasswordSite';
+import UserEmailValidation from './Components/login/UserEmailValidation';
+import SetNewPasswordSite from "./Components/login/SetNewPasswordSite";
+import Dashboard from "./Components/logged/Dashboard";
+import AuthApi from "./authAPI";
+import Cookies from 'js-cookie';
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import './style/App.scss';
 
 const App =  () => {
 
+    const [auth, setAuth] = useState();
     //alert options based on windowWidth
     let options = {
         timeout: 5000,
@@ -20,25 +24,56 @@ const App =  () => {
     if (window.innerWidth < 1024 ){options.position = positions.TOP_RIGHT;}
 
 
-    //@TODO
-    // changing locations in componentDidMount before build production version
     useEffect(()=>{
-        if (window.location.href === 'http://localhost:3001/' || window.location.href === 'http://192.168.1.14:30001/') {
-            window.history.pushState("object or string", "Title", "/login");
-        }
+        readCookie();
     });
 
-    return (
-        <Provider template={AlertTemplate} {...options}>
-            <Switch>
-              <Route path="/" exact component={LoginSite} />
-              <Route path="/login" exact component={LoginSite} />
+    const readCookie = () =>{
+        const userLoggedIn = Cookies.get("JsonWebToken");
+        if (userLoggedIn){
+            setAuth(true);
+        }else{
+            setAuth(false);
+        }
+    };
+
+    const ProtectedRoute = ({component: Component, ...rest}) =>{
+        return(
+            <Route
+                {...rest}
+                render={()=> auth?<Component />:<Redirect to="/login"/>}
+            />
+        )
+    };
+    const ProtectedLogin = ({component: Component, ...rest}) =>{
+        return(
+            <Route
+                {...rest}
+                render={()=> !auth?<Component />:<Redirect to="/dashboard"/>}
+            />
+        )
+    };
+    const Routes =()=>{
+        const Auth = useContext(AuthApi);
+      return(
+          <Switch>
+              <ProtectedLogin path="/" exact component={LoginSite} auth={Auth.auth}/>
+              <ProtectedLogin path="/login" exact component={LoginSite} auth={Auth.auth} />
               <Route path="/registration" exact component={RegistrationSite} />
               <Route path="/forgotPass" exact component={ForgotPasswordSite}/>
               <Route path="/userValidation" component={UserEmailValidation}/>
               <Route path="/setNewPassword" component={SetNewPasswordSite} />
+              <ProtectedRoute path="/dashboard" auth={Auth.auth} component={Dashboard} />
               <Route component={BadPath} />
-            </Switch>
+          </Switch>
+      )
+    };
+
+    return (
+        <Provider template={AlertTemplate} {...options}>
+            <AuthApi.Provider value={{auth,setAuth}}>
+                <Routes/>
+            </AuthApi.Provider>
         </Provider>
     );
 };

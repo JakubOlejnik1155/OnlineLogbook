@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import Logo from '../images/logo-white.svg';
-import '../style/ForgotPasswordSite.scss';
+import Logo from '../../images/logo-white.svg';
+import '../../style/ForgotPasswordSite.scss';
 import { Icon } from '@iconify/react';
 import connection from '../connections';
 import {useAlert} from "react-alert";

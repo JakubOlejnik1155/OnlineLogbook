@@ -2,8 +2,8 @@ import React from 'react';
 import RegistrationForm from './RegistrationForm';
 import Header from './Header';
 import ChangeSection from './ChangeSection';
-import Logo from '../images/logo.svg';
-import '../style/Logo.scss';
+import Logo from '../../images/logo.svg';
+import '../../style/Logo.scss';
 
 
 const RegistrationSite = () => {

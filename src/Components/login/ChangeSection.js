@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import '../style/ChangeSection.scss';
+import '../../style/ChangeSection.scss';
 
 const ChangeSection = (props) => {
     return (

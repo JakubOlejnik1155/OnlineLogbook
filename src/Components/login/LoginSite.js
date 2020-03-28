@@ -2,10 +2,11 @@ import React from 'react';
 import LoginForm from './LoginForm';
 import Header from './Header';
 import ChangeSection from './ChangeSection';
-import Logo from '../images/logo.svg';
-import '../style/Logo.scss';
+import Logo from '../../images/logo.svg';
+import '../../style/Logo.scss';
 
-const LoginSite = () => {
+const LoginSite = (props) => {
+
     return (
         <>
             <div className="wrapper">
@@ -17,11 +18,11 @@ const LoginSite = () => {
                             <Header
                                 mainText="Sign in to e-logbook"
                                 secondaryText="or use your email account:" />
-                            <LoginForm />
+                            <LoginForm auth={props.auth}/>
                         </div>
                     <div className="changeSection">
                         <ChangeSection
-                            message="If your do not have an account, enter your personal details and start your cruise with us."
+                            message="If youe do not have an account, enter your personal details and start your cruise with us."
                             btnText="sign up"
                             path="/registration"
                         />

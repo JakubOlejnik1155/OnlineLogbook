@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import Logo from "../images/logo.svg";
+import Logo from "../../images/logo.svg";
 import {useAlert} from "react-alert";
 import {Icon} from "@iconify/react";
 import bxLockOpen from "@iconify/icons-bx/bx-lock-open";
 import  connections from '../connections';
-import '../style/SetNewPasswordSite.scss';
+import '../../style/SetNewPasswordSite.scss';
 
 
 const SetNewPasswordSite =()=>{

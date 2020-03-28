@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/Header.scss';
+import '../../style/Header.scss';
 import { Icon } from '@iconify/react';
 import bxlFacebookCircle from '@iconify/icons-bx/bxl-facebook-circle';
 import bxlGooglePlusCircle from '@iconify/icons-bx/bxl-google-plus-circle';
