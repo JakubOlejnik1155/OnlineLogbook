@@ -50,8 +50,9 @@ const LoginForm = () => {
                     console.log(data.error);
                 }
                 else{
-                     Cookies.set("JsonWebToken", data.jwt);
-                     Cookies.set("userId", data.userId);
+                    const fiveMinutes = 1/288;
+                     Cookies.set("JsonWebToken", data.jwt, { expires: fiveMinutes });
+                     Cookies.set("userId", data.userId, { expires: fiveMinutes });
                      Auth.setAuth(true);
                 }
 
