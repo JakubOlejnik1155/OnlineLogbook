@@ -2,11 +2,41 @@ import React, {useContext} from "react";
 import AuthApi from "../../authAPI";
 import Cookies from 'js-cookie';
 import Logo from '../../images/logo.svg';
-import '../../style/logged/Dashboard.scss'
+import '../../style/logged/Dashboard.scss';
+import connections from '../connections';
 
 const Dashboard =()=>{
     const Auth = useContext(AuthApi);
-    const logOutHandler =() =>{
+    const logOutHandler = () => {
+        const currestJwt = Cookies.get("JsonWebToken");
+        const userId = Cookies.get("userId");
+        const data = {
+            JsonWebToken: currestJwt,
+            userId: userId
+        };
+        const options ={
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        };
+
+        fetch(connections.address.concat(`/api/user/logout/${userId}`), options)
+            .then(response => {
+                if(response.ok)
+                    return response;
+                throw Error(response.status.toString());
+            })
+            .catch(error =>{
+                console.log(error);
+            })
+
+
+
+
+
+
         Auth.setAuth(false);
         Cookies.remove("JsonWebToken");
         Cookies.remove("userId");
