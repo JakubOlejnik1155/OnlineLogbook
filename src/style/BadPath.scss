@@ -1,0 +1,19 @@
+@import "./variables";
+.BadPathWrapper{
+  width: 100%;
+  height: 100vh;
+  background-image: linear-gradient(to right, #39d6eb, #5ef1d1, #5ef1d1, #39d6eb);  box-shadow: 0 5px 15px rgba(242, 97, 103, .4);
+  color: gray;
+  letter-spacing: $mainSpacing;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  justify-content: center;
+}
+.contentWrapper{
+  text-align: center;
+}
+.errorNumber{
+    color: rgba(214, 117, 25, 0.959);
+    font-style: italic;
+}

@@ -11,7 +11,6 @@ const ForgotPasswordSite = () => {
     const [email, setEmail] = useState('');
     const alert = useAlert();
 
-
     const handleEmailInputChange =(event)=>{
         setEmail(event.target.value);
     };

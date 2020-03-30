@@ -1,15 +1,57 @@
-@import "../variables";
-.BadPathWrapper{
-  width: 100%;
-  height: 100vh;
-  background-image: linear-gradient(to right, #eb3941, #f15e64, #e14e53, #e2373f);  box-shadow: 0 5px 15px rgba(242, 97, 103, .4);
-  color: white;
-  letter-spacing: $mainSpacing;
-  display: flex;
-  align-items: center;
-  font-size: 24px;
-  justify-content: center;
+@import '../variables.scss';
+@import '../mediaQuerys.scss';
+.Dashboard{
+    background-color: gray;
+    width: 100%;
+    min-height: 100vh;
+    &__header{
+        width: 100%;
+        height: 60px;
+        padding: 0 20px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
-.contentWrapper{
-  text-align: center;
+.DHeader{
+    &__Logo{
+        display: flex;
+        align-items: flex-end;
+    }
+    &__image{
+        margin-right: 10px;
+    }
+    &__title{
+        color: $mainTextColor;
+        font-size: $smallMobile;
+        font-weight: 100;
+        letter-spacing: $mainSpacing;
+        align-self: center;
+        padding-top: 5px;
+        @include MQ (tablet-large){
+            font-size: $bigMobile * 1.2;
+            align-self: flex-end;
+        }
+    }
+     &__SignOutBtn{
+
+        text-transform: uppercase;
+        color: white;
+        outline: none;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 50px;
+        background-image: $errorGradient;
+        background-size: 300% 100%;
+        transition: all .6s linear;
+        box-shadow: 0 4px 10px 0 rgba(229, 66, 10, 0.75);
+        @include MQ(tablet){
+            font-size: $smallMobile * 0.8;
+        }
+        &:hover {
+            cursor: pointer;
+            background-position: 100% 0;
+        }
+    }
 }
