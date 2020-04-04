@@ -28,8 +28,8 @@ const App =  () => {
         readCookie();
     });
 
-    const readCookie = () =>{
-        const userLoggedIn = Cookies.get("JsonWebToken");
+    const readCookie = () => {
+        const userLoggedIn = Cookies.get("RefreshToken");
         if (userLoggedIn){
             setAuth(true);
         }else{
@@ -63,7 +63,7 @@ const App =  () => {
               <Route path="/forgotPass" exact component={ForgotPasswordSite}/>
               <Route path="/userValidation" component={UserEmailValidation}/>
               <Route path="/setNewPassword" component={SetNewPasswordSite} />
-              <ProtectedRoute path="/dashboard" auth={Auth.auth} component={Dashboard} />
+              <ProtectedRoute path="/dashboard" auth={Auth.auth} component={Dashboard}/>
               <Route component={BadPath} />
           </Switch>
       )

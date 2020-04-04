@@ -35,7 +35,7 @@ const SetNewPasswordSite =()=>{
           },
           body: JSON.stringify(data)
       };
-      fetch(connections.address.concat(`/api/user/setNewPassword/${token}`), options)
+      fetch(connections.server.concat(`/api/user/setNewPassword/${token}`), options)
           .then(response =>{
               if (response.ok)
                   return response;

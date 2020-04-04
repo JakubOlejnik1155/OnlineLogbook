@@ -26,7 +26,7 @@ const ForgotPasswordSite = () => {
             },
             body: JSON.stringify(data),
         };
-        fetch(connection.address.concat("/api/user/renewPassword"), options)
+        fetch(connection.server.concat("/api/user/renewPassword"), options)
             .then(response => {
                 if (response.ok)
                     return response;

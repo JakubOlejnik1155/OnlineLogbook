@@ -38,7 +38,7 @@ const RegistrationForm = () =>{
             },
             body: JSON.stringify(data),
         };
-        fetch(connection.address.concat("/api/user/register"), options)
+        fetch(connection.server.concat("/api/user/register"), options)
             .then(response => {
                 if (response.ok)
                     return response;

@@ -14,15 +14,15 @@ const LoginSite = (props) => {
                     <img className="logo__image" src={Logo} alt="logo" />
                 </div>
                 <div className="formsPlusChanegeSection">
-                        <div className="formsContainer__loginForm">
-                            <Header
-                                mainText="Sign in to e-logbook"
-                                secondaryText="or use your email account:" />
-                            <LoginForm auth={props.auth}/>
-                        </div>
+                    <div className="formsContainer__loginForm">
+                        <Header
+                            mainText="Sign in to e-logbook"
+                            secondaryText="or use your email account:" />
+                        <LoginForm auth={props.auth}/>
+                    </div>
                     <div className="changeSection">
                         <ChangeSection
-                            message="If youe do not have an account, enter your personal details and start your cruise with us."
+                            message="If you do not have an account, enter your personal details and start your cruise with us."
                             btnText="sign up"
                             path="/registration"
                         />

@@ -15,7 +15,7 @@ const UserEmailValidation =()=>{
         const options ={
             method: 'PUT',
         };
-        fetch(connection.address.concat(`/api/user/validation/${token}`), options)
+        fetch(connection.server.concat(`/api/user/validation/${token}`), options)
             .then(response=>{
                 if (response.ok)
                     return response;

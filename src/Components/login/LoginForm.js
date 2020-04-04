@@ -4,7 +4,7 @@ import '../../style/LoginForm.scss';
 import { Icon } from '@iconify/react';
 import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
 import bxLockOpen from '@iconify/icons-bx/bx-lock-open';
-import conections from '../connections';
+import connections from '../connections';
 import {useAlert} from "react-alert";
 import AuthApi from "../../authAPI";
 import Cookies from 'js-cookie';
@@ -13,6 +13,7 @@ const LoginForm = () => {
     //attributes
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const alert = useAlert();
     const Auth = useContext(AuthApi);
     //methods
@@ -22,6 +23,9 @@ const LoginForm = () => {
     };
     const handleLoginPassword = (event) => {
         setPassword(event.target.value);
+    };
+    const handleRememberCheckboxChange = () =>{
+        setRememberMe(!rememberMe);
     };
 
     const handleLoginFormSubmission = (event) =>{
@@ -37,7 +41,7 @@ const LoginForm = () => {
             },
             body: JSON.stringify(data)
         };
-        fetch(conections.address.concat("/api/user/login"), options)
+        fetch(connections.authServer.concat("/api/user/login"), options)
             .then(response => {
                 if (response.ok)
                     return response;
@@ -51,21 +55,17 @@ const LoginForm = () => {
                 }
                 else{
                     const fiveMinutes = 1/288;
-                     Cookies.set("JsonWebToken", data.jwt, { expires: fiveMinutes });
-                     Cookies.set("userId", data.userId, { expires: fiveMinutes });
+                     Cookies.set("JsonWebToken", data.accessToken, { expires: fiveMinutes });
+                     if (rememberMe) Cookies.set("RefreshToken", data.refreshToken, {expires: 365});
+                     else Cookies.set("RefreshToken", data.refreshToken);
                      Auth.setAuth(true);
                 }
-
             })
             .catch(error=>{
                 alert.error(`${error}`);
                 console.error(error);
             })
-
     };
-
-
-
         return (
             <>
                 <form className="loginForm" onSubmit={handleLoginFormSubmission}>
@@ -86,6 +86,12 @@ const LoginForm = () => {
                                 Password
                             </span>
                         </label>
+                    </div>
+                    <div className="rememberMeContainer">
+                        <label htmlFor="rememberMe" className="rememberMe">
+                            <input className="rememberMeCheckbox" type="checkbox" name="rememberMe" id="rememberMe"  value={rememberMe} onChange={handleRememberCheckboxChange}/>
+                            <div className="rememberMeCheckbox__box"></div>
+                            Remember me</label>
                     </div>
                     <p className="ForgotPassword"><Link to="/forgotPass" className="ForgotPassword__Link"  type="button">Forgot your password?</Link></p>
                     <button className="loginForm__SignInButton" type="submit">Sign In</button>
