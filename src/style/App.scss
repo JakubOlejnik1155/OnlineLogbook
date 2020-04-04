@@ -38,7 +38,14 @@
             flex-direction: column;
             justify-content: center;
             margin: 0;
-            background-image: $mainColorGradient;
+           position: relative;
+           .bgImage{
+             background-image: url("../images/changeSectionBG.jpg");
+             filter: blur(1px);
+             height: 100%;
+             background-position: center;
+             background-size: cover;
+           }
         }
     }
 }
