@@ -3,9 +3,10 @@ import '../../style/Header.scss';
 import { Icon } from '@iconify/react';
 import { useAlert} from 'react-alert'
 import connection from '../connections';
-import bxlFacebookCircle from '@iconify/icons-bx/bxl-facebook-circle';
-import bxlGooglePlusCircle from '@iconify/icons-bx/bxl-google-plus-circle';
+import googleIcon from '@iconify/icons-flat-color-icons/google';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import bxlFacebook from '@iconify/icons-bx/bxl-facebook';
+import { GoogleLogin } from 'react-google-login';
 import Cookies from "js-cookie";
 import AuthApi from "../../authAPI"
 require('dotenv').config();
@@ -13,13 +14,19 @@ require('dotenv').config();
 const LoginHeader = (props) => {
     const alert = useAlert();
     const Auth = useContext(AuthApi)
+
     const responseFacebook = (response) => {
-        console.log(response);
-        if(response.status !== "unknown")
-            addFbUser(response.email, response.picture.data.url);
+        if(response.status !== "not_authorized")
+            addSocialUser(response.email, response.picture.data.url);
     };
 
-    const addFbUser = (email, pictureUrl) => {
+    const responseGoogle = response => {
+        addSocialUser(response.profileObj.email, response.profileObj.imageUrl);
+    };
+    const responseGoogleFail = () => {
+        alert.error("something get wrong");
+    };
+    const addSocialUser = (email, pictureUrl) => {
         const data = {
             email: email,
             profilePicture: pictureUrl
@@ -31,7 +38,7 @@ const LoginHeader = (props) => {
             },
             body:JSON.stringify(data)
         }
-        fetch(connection.server.concat("/api/user/facebook"), options)
+        fetch(connection.server.concat("/api/user/socialuser"), options)
             .then(response => {
                 if(response.ok) return response;
                 throw Error(response.status.toString())
@@ -42,18 +49,18 @@ const LoginHeader = (props) => {
                     alert.error(`${data.error}`);
                     console.error(data.error);
                 }else{
-                    //zaloguj ciasteczka i inne takie
-                    console.log(data);
+                    //login
                     const fiveMinutes = 1/288;
                     Cookies.set("JsonWebToken", data.accessToken, {expires: fiveMinutes});
                     Cookies.set("RefreshToken", data.refreshToken, { expires: 365 });
+                    Cookies.set('pp', data.profilePicture, { expires: 365 });
                     Auth.setAuth(true);
                 }
             })
             .catch(error => {
                 alert.error(`${error}`);
             })
-    }
+    };
 
     return (
         <div className="welcomeSection">
@@ -65,10 +72,19 @@ const LoginHeader = (props) => {
                     fields="name,email,picture"
                     callback={responseFacebook}
                     render={renderProps => (
-                        <Icon className="socialLoginIcon" icon={bxlFacebookCircle} onClick={renderProps.onClick}/>
+                        <Icon className="socialLoginIcon" icon={bxlFacebook} onClick={renderProps.onClick}/>
                     )}
                 />
-                <Icon className="socialLoginIcon" icon={bxlGooglePlusCircle} />
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLEAPPKEY}
+                    render={renderProps => (
+                        <Icon className="socialLoginIcon" icon={googleIcon} onClick={renderProps.onClick}/>
+                    )}
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogleFail}
+                    cookiePolicy={'single_host_origin'}
+                />
+
             </div>
             <h3 className="welcomeSection__secondaryText">{props.secondaryText}</h3>
         </div>

@@ -15,6 +15,7 @@ const Dashboard =()=>{
         Auth.setAuth(false);
         Cookies.remove("JsonWebToken");
         Cookies.remove("RefreshToken");
+        Cookies.remove("pp");
     };
 
 

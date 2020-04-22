@@ -56,8 +56,14 @@ const LoginForm = () => {
                 else{
                     const fiveMinutes = 1/288;
                      Cookies.set("JsonWebToken", data.accessToken, { expires: fiveMinutes });
-                     if (rememberMe) Cookies.set("RefreshToken", data.refreshToken, {expires: 365});
-                     else Cookies.set("RefreshToken", data.refreshToken);
+                     if (rememberMe){
+                         Cookies.set("RefreshToken", data.refreshToken, {expires: 365});
+                         Cookies.set("pp", data.profilePicture, { expires: 365});
+                     }
+                     else {
+                         Cookies.set("RefreshToken", data.refreshToken);
+                         Cookies.set("pp", data.profilePicture);
+                     }
                      Auth.setAuth(true);
                 }
             })

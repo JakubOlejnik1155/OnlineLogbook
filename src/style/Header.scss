@@ -24,14 +24,13 @@
     .socialLoginIcon{
         height: 40px;
         width: 40px;
-        transition: color .2s linear;
+        color: #1777f2;
         &:nth-of-type(2){
             margin-left: 15px;
         }
         &:hover{
             cursor: pointer;
-            color: #184e81;
-            animation: hop .2s linear;
+            animation: hop .4s linear forwards;
         }
     }
     &__secondaryText{
@@ -49,12 +48,8 @@
     0%{
         transform: translateY(0%);
     }
-    50%{
-        transform: translateY(-15%);
-
-    }
     100%{
-        transform: translateY(0%);
+        transform: translateY(-15%);
 
     }
 }
