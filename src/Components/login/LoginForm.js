@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import { Link } from "react-router-dom";
-import '../../style/LoginForm.scss';
+import '../../style/login/LoginForm.scss';
 import { Icon } from '@iconify/react';
 import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
 import bxLockOpen from '@iconify/icons-bx/bx-lock-open';

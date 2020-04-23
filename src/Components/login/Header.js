@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import '../../style/Header.scss';
+import '../../style/login/Header.scss';
 import { Icon } from '@iconify/react';
 import { useAlert} from 'react-alert'
 import connection from '../connections';

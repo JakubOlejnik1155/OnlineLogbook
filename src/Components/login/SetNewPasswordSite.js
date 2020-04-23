@@ -4,7 +4,7 @@ import {useAlert} from "react-alert";
 import {Icon} from "@iconify/react";
 import bxLockOpen from "@iconify/icons-bx/bx-lock-open";
 import  connections from '../connections';
-import '../../style/SetNewPasswordSite.scss';
+import '../../style/login/SetNewPasswordSite.scss';
 
 
 const SetNewPasswordSite =()=>{

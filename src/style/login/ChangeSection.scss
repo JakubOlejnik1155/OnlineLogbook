@@ -1,5 +1,5 @@
-@import './variables.scss';
-@import './mediaQuerys.scss';
+@import '../variables.scss';
+@import '../mediaQuerys.scss';
 .InnerChangeSection{
     margin: 0px auto 20px auto;
   @include MQ (tablet-large){

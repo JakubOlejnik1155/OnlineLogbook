@@ -3,7 +3,7 @@ import LoginForm from './LoginForm';
 import Header from './Header';
 import ChangeSection from './ChangeSection';
 import Logo from '../../images/logo.svg';
-import '../../style/Logo.scss';
+import '../../style/login/Logo.scss';
 
 const LoginSite = (props) => {
 

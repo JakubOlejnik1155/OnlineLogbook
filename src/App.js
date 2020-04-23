@@ -11,7 +11,7 @@ import AuthApi from "./authAPI";
 import Cookies from 'js-cookie';
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
-import './style/App.scss';
+import './style/login/App.scss';
 
 const App =  () => {
 

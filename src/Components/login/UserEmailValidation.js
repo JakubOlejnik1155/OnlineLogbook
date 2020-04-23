@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useAlert} from "react-alert";
-import '../../style/UserEmailValidation.scss'
+import '../../style/login/UserEmailValidation.scss'
 import connection from '../connections';
 import Logo from "../../images/logo-white.svg";
 

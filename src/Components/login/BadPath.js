@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import '../../style/BadPath.scss'
+import '../../style/login/BadPath.scss'
 
 const BadPath = () => {
     return (

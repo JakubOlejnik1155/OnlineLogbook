@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useAlert} from "react-alert";
-import '../../style/RegistrationForm.scss';
+import '../../style/login/RegistrationForm.scss';
 import { Icon } from '@iconify/react';
 import connection from '../connections';
 import baselineAlternateEmail from '@iconify/icons-ic/baseline-alternate-email';
