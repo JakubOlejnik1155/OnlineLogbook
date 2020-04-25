@@ -22,7 +22,7 @@ const RegistrationForm = () =>{
     const handleRegistrationPasswordConfirm = (event) => {
         setPasswordConfirm( event.target.value);
     };
-    //@TODO
+    //TODO:
     //Client site data validation!!!!
     const handleRegisterFormSubmission = (event) => {
         event.preventDefault();
