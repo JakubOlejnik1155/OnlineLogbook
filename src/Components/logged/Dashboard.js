@@ -3,9 +3,6 @@ import AuthApi from "../../authAPI";
 import Cookies from 'js-cookie';
 import Logo from '../../images/logo.svg';
 import '../../style/logged/Dashboard.scss';
-import {Switch, Route} from 'react-router-dom'
-import Settings from "./Settings";
-import ExampleOne from "./ExampleOne";
 import connections from '../connections';
 
 const Dashboard =()=>{
@@ -18,7 +15,7 @@ const Dashboard =()=>{
         Cookies.remove("pp");
     };
 
-
+    //deleting RT from DB
     const deleteRefreshToken = () => {
         const currentRefreshToken = Cookies.get("RefreshToken");
         const data = {
@@ -38,6 +35,7 @@ const Dashboard =()=>{
             })
             .catch(error => console.error(error))
     };
+    //logout from dashboard
     const readCookie = () => {
         const userLoggedIn = Cookies.get("RefreshToken");
         if (userLoggedIn){
@@ -46,25 +44,25 @@ const Dashboard =()=>{
             Auth.setAuth(false);
         }
     };
+
     useEffect(()=>{
         readCookie();
     });
-    return(
-        <>
-            <div className="Dashboard">
+   return(
+        <div>
+           <div className="Dashboard">
                 <header className="Dashboard__header DHeader">
                     <div className="DHeader__Logo">
+                       {/* TODO: logo as link to main dashboard page */}
                         <img className="DHeader__image" src={Logo} alt="logo" />
                         <h1 className="DHeader__title">Online Logbook</h1>
                     </div>
-                    <button className="DHeader__SignOutBtn" onClick={logOutHandler}>Sign Out</button>
+                   {Cookies.get("pp") !== "undefined" && (<img className="DHeader__ProfilePicture" src={Cookies.get("pp")} alt="" />)}
+                        <button className="DHeader__SignOutBtn" onClick={logOutHandler}>Sign Out</button>
                 </header>
-                <Switch>
-                    <Route path="/dashboard" exact component={ExampleOne}/>
-                    <Route path="/dashboard/settings" exact component={Settings}/>
-                </Switch>
-            </div>
-        </>
+
+           </div>
+        </div>
     )
 };
 

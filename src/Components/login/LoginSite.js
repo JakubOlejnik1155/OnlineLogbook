@@ -11,6 +11,7 @@ const LoginSite = (props) => {
         <>
             <div className="wrapper">
                 <div className="logo">
+                    {/* TODO: logo as link to login main page*/}
                     <img className="logo__image" src={Logo} alt="logo" />
                 </div>
                 <div className="formsPlusChanegeSection">

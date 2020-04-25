@@ -18,6 +18,7 @@
     &__Logo{
         display: flex;
         align-items: flex-end;
+        margin-right: auto;
     }
     &__image{
         margin-right: 10px;
@@ -53,5 +54,12 @@
             cursor: pointer;
             background-position: 100% 0;
         }
+    }
+    &__ProfilePicture{
+        height: 38px;
+        width: 38px;
+        margin-right: 10px;
+        border: 1px solid #7c7c7c;
+        border-radius: 5px;
     }
 }

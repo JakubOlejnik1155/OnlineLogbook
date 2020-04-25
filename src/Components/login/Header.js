@@ -75,6 +75,7 @@ const LoginHeader = (props) => {
                         <Icon className="socialLoginIcon" icon={bxlFacebook} onClick={renderProps.onClick}/>
                     )}
                 />
+                {/* TODO: resolve "React state update on an unmounted component" WARNING */}
                 <GoogleLogin
                     clientId={process.env.REACT_APP_GOOGLEAPPKEY}
                     render={renderProps => (

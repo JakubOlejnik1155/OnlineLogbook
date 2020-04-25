@@ -25,7 +25,8 @@ const App =  () => {
 
 
     useEffect(()=>{
-        readCookie();
+        if (!window.location.href.includes("userValidation")) //NOTE: prevent double notification while userValidationEmail
+            readCookie();
     });
 
     const readCookie = () => {
@@ -59,10 +60,10 @@ const App =  () => {
           <Switch>
               <ProtectedLogin path="/" exact component={LoginSite} auth={Auth.auth}/>
               <ProtectedLogin path="/login" exact component={LoginSite} auth={Auth.auth} />
-              <Route path="/registration" exact component={RegistrationSite} />
-              <Route path="/forgotPass" exact component={ForgotPasswordSite}/>
-              <Route path="/userValidation" component={UserEmailValidation}/>
-              <Route path="/setNewPassword" component={SetNewPasswordSite} />
+              <ProtectedLogin path="/registration" exact component={RegistrationSite} />
+              <ProtectedLogin path="/forgotPass" exact component={ForgotPasswordSite}/>
+              <ProtectedLogin path="/userValidation" component={UserEmailValidation}/>
+              <ProtectedLogin path="/setNewPassword" component={SetNewPasswordSite} />
               <ProtectedRoute path="/dashboard" auth={Auth.auth} component={Dashboard}/>
               <Route component={BadPath} />
           </Switch>

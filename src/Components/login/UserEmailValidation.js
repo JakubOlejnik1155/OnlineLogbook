@@ -6,7 +6,9 @@ import Logo from "../../images/logo-white.svg";
 
 
 const UserEmailValidation =()=>{
+
     const alert = useAlert();
+
     useEffect(()=>{
         //get token from url
         const urlParams = new URLSearchParams(window.location.search);
