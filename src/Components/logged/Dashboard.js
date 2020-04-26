@@ -1,12 +1,17 @@
-import React, {useContext, useEffect} from "react";
-import {Link, Switch, Route} from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { Switch, Route } from 'react-router-dom';
 import AuthApi from "../../authAPI";
 import Cookies from 'js-cookie';
 import DashboardHeader from './DashboardHeader';
+import Menu from './Menu';
 import '../../style/logged/Dashboard.scss';
 
 const Dashboard =()=>{
     const Auth = useContext(AuthApi);
+    //STATES WITH MENU TOGGLE
+    const [state, setState] = React.useState({
+        isMenuOpened: false,
+    });
 
     //logout from dashboard
     const readCookie = () => {
@@ -22,24 +27,21 @@ const Dashboard =()=>{
         readCookie();
     });
    return(
-        <div>
+        <>
            <div className="Dashboard">
-            <DashboardHeader/>
+                <DashboardHeader
+                    state={state}
+                    setState={setState}/>
+                <Menu
+                    state={state}
+                    setState={setState}/>
                 <Switch>
-                   <Route path="/dashboard" exact component={LinkToSettings} />
-                   <Route path="/dashboard/settings"  component={LinkToDash}/>
+                   <Route path="/dashboard" exact> <p style={{textAlign: 'center'}}>Dashboard</p> </Route>
+                   <Route path="/dashboard/settings"> <p style={{ textAlign: 'center' }}>settings</p> </Route>
                 </Switch>
-
-
            </div>
-        </div>
+        </>
     )
 };
-
-const LinkToSettings = () =>
-    <Link to="/dashboard/settings"> Go to settings</Link>
-const LinkToDash = () =>
-    <Link to="/dashboard"> Go to dash</Link>
-
 
 export default Dashboard;

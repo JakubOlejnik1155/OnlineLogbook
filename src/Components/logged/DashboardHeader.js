@@ -4,10 +4,15 @@ import Logo from '../../images/logo.svg';
 import AuthApi from "../../authAPI";
 import { Link } from 'react-router-dom';
 import connections from '../connections';
-const DashBoardHeader = () => {
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import IconButton from '@material-ui/core/IconButton';
+import UserProfilePicture from './Avatar';
+
+
+
+const DashBoardHeader = (props) => {
 
     const Auth = useContext(AuthApi);
-
     const logOutHandler = () => {
         deleteRefreshToken();
         Auth.setAuth(false);
@@ -40,12 +45,15 @@ const DashBoardHeader = () => {
     return (
         <header className="Dashboard__header DHeader">
             <div className="DHeader__Logo">
+                <IconButton aria-label="menu" onClick={()=>props.setState({isMenuOpened: !props.state.isMenuOpened})}>
+                    <MenuRoundedIcon color="primary" />
+                </IconButton>
                 <Link to="/dashboard" style={{ display: "flex" }}>
                     <img className="DHeader__image" src={Logo} alt="logo" />
                 </Link>
                 <h1 className="DHeader__title">Online Logbook</h1>
             </div>
-            {Cookies.get("pp") !== "undefined" && (<img className="DHeader__ProfilePicture" src={Cookies.get("pp")} alt="" />)}
+            <UserProfilePicture />
             <button className="DHeader__SignOutBtn" onClick={logOutHandler}>Sign Out</button>
         </header>
      );
