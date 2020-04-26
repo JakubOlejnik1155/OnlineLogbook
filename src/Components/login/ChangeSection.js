@@ -8,7 +8,7 @@ const ChangeSection = (props) => {
             <div className="bgImage"></div>
             <div className="InnerChangeSection">
                 <p className="changeMessage">{props.message}</p>
-                <Link to={props.path}className="changeSection__button">{props.btnText}</Link>
+                <Link to={props.path}className="changeSection__button" style={{color: 'white'}}>{props.btnText}</Link>
             </div>
         </>
 

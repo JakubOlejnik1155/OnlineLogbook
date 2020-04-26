@@ -30,37 +30,46 @@ const useStyles = makeStyles(theme => ({
     },
     start:{
         color: 'green',
+        '& a': {
+            color: 'green',
+        }
     },
     startIcon: {
         fill: 'green',
     },
     add:{
         color: '#000046',
+        '& a': {
+            color: '#000046',
+        }
     },
     addIcon: {
         fill: '#000046',
     },
     stats: {
-        color: '#0570e6'
+        color: '#0570e6',
+        '& a': {
+            color: '#0570e6',
+        }
     },
     statsIcon: {
         fill: '#0570e6'
     },
     danger: {
         color: '#e85214',
+        '& a': {
+            color: '#e85214',
+        }
     },
     dangerIcon: {
         fill: '#e85214',
-    },
-    margin: {
-        margin: theme.spacing(1),
     }
 }));
 
 export default function Menu(props) {
     const classes = useStyles();
 
-
+    //TODO: make MenuLink Comonent
     const list = () => (
         <div
             className={classes.list}
@@ -78,55 +87,75 @@ export default function Menu(props) {
             </List>
             <Divider />
             <List className={classes.start}>
-                <ListItem button>
-                    <ListItemIcon> <SendTwoToneIcon className={classes.startIcon}/> </ListItemIcon>
-                    <ListItemText primary={"New cruise"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon> <SendTwoToneIcon className={classes.startIcon}/> </ListItemIcon>
-                    <ListItemText primary={"New day"} />
-                </ListItem>
+                <Link to="/dashboard/start/cruise">
+                    <ListItem button>
+                        <ListItemIcon> <SendTwoToneIcon className={classes.startIcon}/> </ListItemIcon>
+                        <ListItemText primary={"New cruise"} />
+                    </ListItem>
+                </Link>
+                <Link to="/dashboard/start/day">
+                    <ListItem button>
+                        <ListItemIcon> <SendTwoToneIcon className={classes.startIcon}/> </ListItemIcon>
+                        <ListItemText primary={"New day"} />
+                    </ListItem>
+                </Link>
             </List>
             <Divider/>
             <List className={classes.add}>
-                <ListItem button>
-                    <ListItemIcon> <AddAlarmTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
-                    <ListItemText primary={"Add hourly entry"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon> <CloudTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
-                    <ListItemText primary={"Add weather note"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon> <AddCommentTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
-                    <ListItemText primary={"Add on-board action"} />
-                </ListItem>
+                <Link to="/dashboard/add">
+                    <ListItem button>
+                        <ListItemIcon> <AddAlarmTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
+                        <ListItemText primary={"Add hourly entry"} />
+                    </ListItem>
+                </Link>
+                <Link to="/dashboard/add/weather">
+                    <ListItem button>
+                        <ListItemIcon> <CloudTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
+                        <ListItemText primary={"Add weather note"} />
+                    </ListItem>
+                </Link>
+                <Link to="/dashboard/add/action">
+                    <ListItem button>
+                        <ListItemIcon> <AddCommentTwoToneIcon className={classes.addIcon}/> </ListItemIcon>
+                        <ListItemText primary={"Add on-board action"} />
+                    </ListItem>
+                </Link>
             </List>
             <Divider />
                 <List className={classes.danger}>
-                    <ListItem button>
-                    <ListItemIcon> <CancelScheduleSendTwoToneIcon className={classes.dangerIcon}/> </ListItemIcon>
-                        <ListItemText primary={"Finish cruise"} />
-                    </ListItem>
-                    <ListItem button>
-                    <ListItemIcon> <CancelScheduleSendTwoToneIcon className={classes.dangerIcon}/> </ListItemIcon>
-                        <ListItemText primary={"Finish sailing day"} />
-                    </ListItem>
+                    <Link to="/dashboard/finish/cruise">
+                        <ListItem button>
+                        <ListItemIcon> <CancelScheduleSendTwoToneIcon className={classes.dangerIcon}/> </ListItemIcon>
+                            <ListItemText primary={"Finish cruise"} />
+                        </ListItem>
+                    </Link>
+                    <Link to="/dashboard/finish/day">
+                        <ListItem button>
+                        <ListItemIcon> <CancelScheduleSendTwoToneIcon className={classes.dangerIcon}/> </ListItemIcon>
+                            <ListItemText primary={"Finish sailing day"} />
+                        </ListItem>
+                    </Link>
                 </List>
             <Divider />
                 <List className={classes.beforeLastSection+" "+classes.stats}>
-                    <ListItem button>
-                        <ListItemIcon> <TrendingUpTwoToneIcon className={classes.statsIcon} /> </ListItemIcon>
-                        <ListItemText primary={"My cruises"} />
-                    </ListItem>
-                    <ListItem button>
-                    <ListItemIcon> <DateRangeTwoToneIcon className={classes.statsIcon}/> </ListItemIcon>
-                        <ListItemText primary={"Days of the current trip"} />
-                    </ListItem>
-                    <ListItem button>
-                    <ListItemIcon> <MapTwoToneIcon className={classes.statsIcon}/> </ListItemIcon>
-                        <ListItemText primary={"Map"} />
-                    </ListItem>
+                    <Link to="/dashboard/cruises">
+                        <ListItem button>
+                            <ListItemIcon> <TrendingUpTwoToneIcon className={classes.statsIcon} /> </ListItemIcon>
+                            <ListItemText primary={"My cruises"} />
+                        </ListItem>
+                    </Link>
+                    <Link to="/dashboard/current-trip-days">
+                        <ListItem button>
+                        <ListItemIcon> <DateRangeTwoToneIcon className={classes.statsIcon}/> </ListItemIcon>
+                            <ListItemText primary={"Days of the current trip"} />
+                        </ListItem>
+                    </Link>
+                    <Link to="/dashboard/map">
+                        <ListItem button>
+                        <ListItemIcon> <MapTwoToneIcon className={classes.statsIcon}/> </ListItemIcon>
+                            <ListItemText primary={"Map"} />
+                        </ListItem>
+                    </Link>
                 </List>
             <Divider/>
             <List>
@@ -136,10 +165,12 @@ export default function Menu(props) {
                         <ListItemText primary={"Account settings"} />
                     </ListItem>
                 </Link>
-                <ListItem button>
-                    <ListItemIcon> <InfoTwoToneIcon /> </ListItemIcon>
-                    <ListItemText primary={"About Online Logbook"} />
-                </ListItem>
+                <Link to="/dashboard/about">
+                    <ListItem button>
+                        <ListItemIcon> <InfoTwoToneIcon /> </ListItemIcon>
+                        <ListItemText primary={"About Online Logbook"} />
+                    </ListItem>
+                </Link>
             </List>
         </div>
     );
