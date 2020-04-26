@@ -22,10 +22,30 @@ const Dashboard =()=>{
             Auth.setAuth(false);
         }
     };
-
+    //check if user login
     useEffect(()=>{
         readCookie();
     });
+
+    const Routes = () => (
+        <Switch>
+            <Route path="/dashboard" exact> <p style={{ textAlign: 'center' }}>Dashboard</p> </Route>
+            <Route path="/dashboard/start/cruise" exact> <p style={{ textAlign: 'center' }}>Start Cruise</p> </Route>
+            <Route path="/dashboard/start/day" exact> <p style={{ textAlign: 'center' }}>Start Day</p> </Route>
+            <Route path="/dashboard/add" exact> <p style={{ textAlign: 'center' }}>add log entry</p> </Route>
+            <Route path="/dashboard/add/weather" exact> <p style={{ textAlign: 'center' }}>Add weather</p> </Route>
+            <Route path="/dashboard/add/action" exact> <p style={{ textAlign: 'center' }}>Add action</p> </Route>
+            <Route path="/dashboard/finish/cruise" exact> <p style={{ textAlign: 'center' }}>Finish cruise</p> </Route>
+            <Route path="/dashboard/finish/day" exact> <p style={{ textAlign: 'center' }}>Finish Day</p> </Route>
+            <Route path="/dashboard/cruises" exact> <p style={{ textAlign: 'center' }}>My Cruises</p> </Route>
+            <Route path="/dashboard/current-trip-days" exact> <p style={{ textAlign: 'center' }}>Days of current Trip</p> </Route>
+            <Route path="/dashboard/map" exact> <p style={{ textAlign: 'center' }}>Map</p> </Route>
+            <Route path="/dashboard/settings" exact> <p style={{ textAlign: 'center' }}>settings</p> </Route>
+            <Route path="/dashboard/about" exact> <p style={{ textAlign: 'center' }}>About</p> </Route>
+        </Switch>
+    )
+
+
    return(
         <>
            <div className="Dashboard">
@@ -35,10 +55,7 @@ const Dashboard =()=>{
                 <Menu
                     state={state}
                     setState={setState}/>
-                <Switch>
-                   <Route path="/dashboard" exact> <p style={{textAlign: 'center'}}>Dashboard</p> </Route>
-                   <Route path="/dashboard/settings"> <p style={{ textAlign: 'center' }}>settings</p> </Route>
-                </Switch>
+                <Routes/>
            </div>
         </>
     )
