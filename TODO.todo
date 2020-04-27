@@ -1,8 +1,9 @@
 Todos:
   New:
 //    ☐ Press Cmd/Ctrl+Enter to add a new todo @critical @high @low @today
-    ☐ Make StartCruise Form @high
+    ☐ Make StartCruise Form @high @started(20-04-27 12:38)
     ☐ Connect GoogleMaps to web app @high
+    ☐ BackDrop loading after social login @low
     ☐ Add forecast to main Dashboard @low
     ☐ Add Social acons as links to the end of Menu list @low
 

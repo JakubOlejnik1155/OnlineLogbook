@@ -13,6 +13,10 @@ import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import './style/login/App.scss';
 
+
+
+
+
 const App =  () => {
 
     const [auth, setAuth] = useState();
@@ -50,7 +54,8 @@ const App =  () => {
         return(
             <Route
                 {...rest}
-                render={()=> !auth?<Component />:<Redirect to="/dashboard"/>}
+                //TODO: Change to dashboard
+                render={() => !auth ? <Component /> : <Redirect to="/dashboard/start/cruise"/>}
             />
         )
     };
