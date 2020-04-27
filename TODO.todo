@@ -1,0 +1,16 @@
+Todos:
+  New:
+//    ☐ Press Cmd/Ctrl+Enter to add a new todo @critical @high @low @today
+    ☐ Make StartCruise Form @high
+    ☐ Connect GoogleMaps to web app @high
+    ☐ Add forecast to main Dashboard @low
+    ☐ Add Social acons as links to the end of Menu list @low
+
+  Done:
+//    ✔ Press Alt+D to mark a todo as done
+  Cancelled:
+//    ✘ Press Alt+C to mark a todo as cancelled
+  Timekeeping:
+//    ☐ Press Alt+S to mark a todo as started @started(17-11-03 10:42)
+
+

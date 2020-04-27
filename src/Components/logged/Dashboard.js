@@ -1,37 +1,63 @@
 import React, { useContext, useEffect } from "react";
 import { Switch, Route } from 'react-router-dom';
-import AuthApi from "../../authAPI";
 import Cookies from 'js-cookie';
+import { makeStyles } from '@material-ui/core/styles';
+
+import '../../style/logged/Dashboard.scss';
+import bg from '../../images/bg/1t.jpg';
+import AuthApi from "../../authAPI";
 import DashboardHeader from './DashboardHeader';
 import Menu from './Menu';
-import '../../style/logged/Dashboard.scss';
+import DashboardCharts from './RoutesComponents/DashboardCharts';
+import NewcruiseForm from './RoutesComponents/NewCruiseForm';
+import NewDayForm from './RoutesComponents/NewDayForm';
+
+
+const useStyles = makeStyles((theme)=>({
+    DashboardContent: {
+        width: '100%',
+        flexGrow: 1,
+        backgroundImage: `url(${bg})`,
+        backgroundPosition: 'bottom',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        display: 'flex',
+        alignItems: 'stretch',
+    }
+}))
+
+
 
 const Dashboard =()=>{
     const Auth = useContext(AuthApi);
+    const classes = useStyles();
     //STATES WITH MENU TOGGLE
     const [state, setState] = React.useState({
         isMenuOpened: false,
     });
-
-    //logout from dashboard
-    const readCookie = () => {
-        const userLoggedIn = Cookies.get("RefreshToken");
-        if (userLoggedIn){
-            Auth.setAuth(true);
-        }else{
-            Auth.setAuth(false);
-        }
-    };
     //check if user login
-    useEffect(()=>{
+    useEffect(() => {
+        //logout from dashboard
+        const readCookie = () => {
+            const userLoggedIn = Cookies.get("RefreshToken");
+            if (userLoggedIn) {
+                Auth.setAuth(true);
+            } else {
+                Auth.setAuth(false);
+            }
+        };
+
         readCookie();
     });
 
+
+
     const Routes = () => (
         <Switch>
-            <Route path="/dashboard" exact> <p style={{ textAlign: 'center' }}>Dashboard</p> </Route>
-            <Route path="/dashboard/start/cruise" exact> <p style={{ textAlign: 'center' }}>Start Cruise</p> </Route>
-            <Route path="/dashboard/start/day" exact> <p style={{ textAlign: 'center' }}>Start Day</p> </Route>
+            <Route path="/dashboard" exact> <DashboardCharts /> </Route>
+            <Route path="/dashboard/start/cruise" exact> <NewcruiseForm /></Route>
+            <Route path="/dashboard/start/day" exact> <NewDayForm /> </Route>
             <Route path="/dashboard/add" exact> <p style={{ textAlign: 'center' }}>add log entry</p> </Route>
             <Route path="/dashboard/add/weather" exact> <p style={{ textAlign: 'center' }}>Add weather</p> </Route>
             <Route path="/dashboard/add/action" exact> <p style={{ textAlign: 'center' }}>Add action</p> </Route>
@@ -55,7 +81,9 @@ const Dashboard =()=>{
                 <Menu
                     state={state}
                     setState={setState}/>
-                <Routes/>
+                <div className={classes.DashboardContent}>
+                     <Routes/>
+                </div>
            </div>
         </>
     )

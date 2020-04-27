@@ -3,6 +3,8 @@
 .Dashboard{
     width: 100%;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     &__header{
         width: 100%;
         height: 60px;
@@ -21,6 +23,7 @@
     }
     &__image{
         margin-right: 10px;
+        margin-left: 10px;
         display: none;
          @include MQ (smartphone-large){
              display: block;
