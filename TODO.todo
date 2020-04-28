@@ -1,14 +1,15 @@
 Todos:
   New:
 //    ☐ Press Cmd/Ctrl+Enter to add a new todo @critical @high @low @today
-    ☐ Make StartCruise Form @high @started(20-04-27 12:38)
-    ☐ Connect GoogleMaps to web app @high
-    ☐ BackDrop loading after social login @low
-    ☐ Add forecast to main Dashboard @low
-    ☐ Add Social acons as links to the end of Menu list @low
+☐ Connect GoogleMaps to web app @high
+☐ Maker StartCruise Form work with backend API @high
+☐ BackDrop loading after social login @low
+☐ Add forecast to main Dashboard @low
+☐ Add Social acons as links to the end of Menu list @low
 
-  Done:
+Done:
 //    ✔ Press Alt+D to mark a todo as done
+✔ Make StartCruise Form @high @started(20-04-27 12:38) @done(20-04-28 14:25) @lasted(1d1h47m47s)
   Cancelled:
 //    ✘ Press Alt+C to mark a todo as cancelled
   Timekeeping:
