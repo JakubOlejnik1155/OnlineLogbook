@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { Switch, Route } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { makeStyles } from '@material-ui/core/styles';
-
 import '../../style/logged/Dashboard.scss';
 import bg from '../../images/bg/1t.jpg';
 import AuthApi from "../../authAPI";
@@ -47,16 +46,14 @@ const Dashboard =()=>{
                 Auth.setAuth(false);
             }
         };
-
         readCookie();
+
     });
-
-
 
     const Routes = () => (
         <Switch>
             <Route path="/dashboard" exact> <DashboardCharts /> </Route>
-            <Route path="/dashboard/start/cruise" exact> <NewcruiseForm /></Route>
+            <Route path="/dashboard/start/cruise" exact> <NewcruiseForm state={state.isMenuOpened}/></Route>
             <Route path="/dashboard/start/day" exact> <NewDayForm /> </Route>
             <Route path="/dashboard/add" exact> <p style={{ textAlign: 'center' }}>add log entry</p> </Route>
             <Route path="/dashboard/add/weather" exact> <p style={{ textAlign: 'center' }}>Add weather</p> </Route>

@@ -2,10 +2,11 @@ Todos:
   New:
 //    ☐ Press Cmd/Ctrl+Enter to add a new todo @critical @high @low @today
 ☐ Connect GoogleMaps to web app @high
-☐ Maker StartCruise Form work with backend API @high
+☐ Make StartCruise Form work with backend API @high
+☐ make spinner bigger! maybe 70px @low
 ☐ BackDrop loading after social login @low
 ☐ Add forecast to main Dashboard @low
-☐ Add Social acons as links to the end of Menu list @low
+☐ Add Social icons as links to the end of Menu list @low
 
 Done:
 //    ✔ Press Alt+D to mark a todo as done
