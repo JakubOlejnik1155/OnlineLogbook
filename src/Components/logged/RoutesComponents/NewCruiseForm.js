@@ -6,9 +6,10 @@ import Paper from '@material-ui/core/Paper';
 import { TextField, Button, Typography } from '@material-ui/core';
 import SendTwoToneIcon from '@material-ui/icons/SendTwoTone';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { countryList } from './data/countres';
+import { countryList } from './components/countres';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import Allert from './components/Allert';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -18,17 +19,63 @@ import connections from '../../connections';
 
 const NewCruiseform = (props) => {
     const classes = useStyles();
-    const { handleSubmit, register, errors } = useForm();
+    const { handleSubmit, register } = useForm();
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [isFormAvialiable, setIsFormAvialiable] = React.useState(undefined);
     const [isLoadeing, setIsLoading] = React.useState(true);
+    const [allert, setAllert] = React.useState({
+        open: false,
+        variant: 'filled',
+        duration: 4000,
+        type: 'success',
+        title: 'success',
+        msg: 'success msg',
+    })
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
 
     const onSubmit = (values, event) =>{
-        console.log(values);
-        event.target.reset();
+        const postCruise = async () =>{
+            const token = Cookies.get('RefreshToken');
+            const options = {
+                method: 'POST',
+                headers: {
+                    'authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            }
+            const response = await fetch(connections.server.concat('/api/cruises'), options);
+            return response.json();
+        }
+        const {boat, cruise} = values;
+        if (boat.name === '' || boat.MMSI === '' || cruise.country === '' || cruise.sailingArea === '' || cruise.harbour === ''){
+            return setAllert({...allert, open: true, msg: 'fill all required inputs marked by *', title: 'bad inputs', type: 'error'})
+        }
+        if(!/^[0-9]{9}$/.test(boat.MMSI))
+            return setAllert({...allert, open: true, type: 'warning', title: "incorrect MMSI", msg: "MMSI number have nine digits" })
+        try{
+            setIsLoading(true);
+            postCruise()
+                .then(response => {
+                    if(response.error){
+                        setIsLoading(false);
+                        return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
+                    }
+                    else if (response.success){
+                        setIsLoading(false);
+                        setAllert({ ...allert, open:true,type:'success', title: 'success', msg: 'cruise was created'});
+                    }
+                    else {
+                        setIsLoading(false);
+                        setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                    }
+                })
+        }catch(error){
+            setIsLoading(false);
+            setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+        }
     };
 
 
@@ -46,27 +93,26 @@ const NewCruiseform = (props) => {
             return response.json();
         }
 
-            try{
-                setTimeout(()=>{
-                    CheckCurrentCruise()
-                        .then(response => {
-                            if (response.data.length === 1) {
-                                setIsFormAvialiable(false);
-                                setIsLoading(false)
-                            }
-                            else {
-                                setIsFormAvialiable(true);
-                                setIsLoading(false)
-                            }
-                        })
-                }, 1000)
-            }catch(error){console.log(error)}
+        try{
+            //TODO: delete timeout before production
+            setTimeout(()=>{
+                CheckCurrentCruise()
+                    .then(response => {
+                        if (response.data.length === 1) {
+                            setIsFormAvialiable(false);
+                            setIsLoading(false)
+                        }
+                        else {
+                            setIsFormAvialiable(true);
+                            setIsLoading(false)
+                        }
+                    })
+            }, 1000)
+        }catch(error){console.log(error)}
 
-    });
-
+    },[]);
 
     const Form = () =>(
-
         <Paper className={classes.paper}>
         <form onSubmit={handleSubmit(onSubmit)}>
             <Grid className={classes.GridContainer}
@@ -94,9 +140,7 @@ const NewCruiseform = (props) => {
                             name="cruise.country"
                             label="country*"
                             variant="outlined"
-                            inputRef={register({ required: "country is required" })}
-                            error={errors.cruise && errors.cruise.country ? true : false}
-                            helperText={(errors.cruise && errors.cruise.country) ? errors.cruise.country.message : " "}
+                            inputRef={register()}
                         />}
                     />
                 </Grid>
@@ -108,10 +152,8 @@ const NewCruiseform = (props) => {
                         label="sailing area*"
                         variant="outlined"
                         size="small"
+                        inputRef={register()}
                         name="cruise.sailingArea"
-                        inputRef={register({ required: "sailing area is required" })}
-                        error={errors.cruise && errors.cruise.sailingArea ? true : false}
-                        helperText={(errors.cruise && errors.cruise.sailingArea) ? errors.cruise.sailingArea.message : " "}
 
                     />
                 </Grid>
@@ -125,9 +167,7 @@ const NewCruiseform = (props) => {
                         size="small"
 
                         name="cruise.harbour"
-                        inputRef={register({ required: "harbour is required" })}
-                        error={errors.cruise && errors.cruise.harbour ? true : false}
-                        helperText={(errors.cruise && errors.cruise.harbour) ? errors.cruise.harbour.message : " "}
+                        inputRef={register()}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -136,6 +176,7 @@ const NewCruiseform = (props) => {
                             id="date-picker-dialog"
                             label="start date"
                             size="small"
+                            disabled
                             format="MM/dd/yyyy"
                             value={selectedDate}
                             onChange={handleDateChange}
@@ -144,7 +185,6 @@ const NewCruiseform = (props) => {
                             }}
                             name="cruise.startDate"
                             inputRef={register()}
-                            helperText=" "
                         />
                     </MuiPickersUtilsProvider>
                 </Grid>
@@ -163,9 +203,7 @@ const NewCruiseform = (props) => {
                         variant="outlined"
                         size="small"
                         name="boat.name"
-                        inputRef={register({ required: "name is required" })}
-                        error={errors.boat && errors.boat.name ? true : false}
-                        helperText={(errors.boat && errors.boat.name) ? errors.boat.name.message : " "}
+                        inputRef={register()}
                     />
                 </Grid>
 
@@ -178,7 +216,6 @@ const NewCruiseform = (props) => {
                         size="small"
                         name="boat.type"
                         inputRef={register()}
-                        helperText=" "
                     />
                 </Grid>
 
@@ -190,15 +227,7 @@ const NewCruiseform = (props) => {
                         variant="outlined"
                         size="small"
                         name="boat.MMSI"
-                        inputRef={register({
-                            required: "MMSI number is required",
-                            pattern: {
-                                value: /^[0-9]{9}$/,
-                                message: "enter a valid MMSI number"
-                            }
-                        })}
-                        error={errors.boat && errors.boat.MMSI ? true : false}
-                        helperText={(errors.boat && errors.boat.MMSI) ? errors.boat.MMSI.message : " "}
+                        inputRef={register()}
                     />
                 </Grid>
 
@@ -212,7 +241,6 @@ const NewCruiseform = (props) => {
 
                         name="boat.draft"
                         inputRef={register()}
-                        helperText=" "
                     />
                 </Grid>
 
@@ -225,7 +253,7 @@ const NewCruiseform = (props) => {
                         endIcon={<SendTwoToneIcon />}
                     >
                         sail
-                                </Button>
+                    </Button>
                 </Grid>
 
             </Grid>
@@ -263,11 +291,12 @@ const NewCruiseform = (props) => {
             alignItems="center"
         >
             <Grid item xs={12} md={8} lg={6} xl={4}>
-                {(isLoadeing && isFormAvialiable===undefined) && <LoadingComponent/>}
-                {(!isLoadeing && isFormAvialiable === false) && <FormDisable/>}
-                {(!isLoadeing && isFormAvialiable === true) && <Form/>}
-                {(!isLoadeing && isFormAvialiable === undefined) && <p style={{textAlign: "center", fontSize: '32px', color: 'white'}}>Try to refresh page</p>}
+                <LoadingComponent />
+                {isFormAvialiable === false ? <FormDisable /> : <Form/>}
             </Grid>
+            <Allert
+                allert={allert}
+                setAllert={setAllert}/>
         </Grid>
      );
 };
@@ -299,6 +328,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '60px',
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
+        '& .MuiCircularProgress-root':{
+            width: '70px !important',
+            height: '70px !important',
+        }
     },
 }))
 const CssTextField = withStyles({

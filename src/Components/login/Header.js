@@ -16,7 +16,8 @@ const LoginHeader = (props) => {
     const Auth = useContext(AuthApi)
 
     const responseFacebook = (response) => {
-        if(response.status !== "not_authorized")
+        console.log(response);
+        if(response.status !== "not_authorized" && response.status !== "unknown")
             addSocialUser(response.email, response.picture.data.url);
     };
 

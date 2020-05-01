@@ -50,10 +50,10 @@ const Dashboard =()=>{
 
     });
 
-    const Routes = () => (
+    const Routes = React.useMemo(() => (
         <Switch>
             <Route path="/dashboard" exact> <DashboardCharts /> </Route>
-            <Route path="/dashboard/start/cruise" exact> <NewcruiseForm state={state.isMenuOpened}/></Route>
+            <Route path="/dashboard/start/cruise" exact > <NewcruiseForm/> </Route>
             <Route path="/dashboard/start/day" exact> <NewDayForm /> </Route>
             <Route path="/dashboard/add" exact> <p style={{ textAlign: 'center' }}>add log entry</p> </Route>
             <Route path="/dashboard/add/weather" exact> <p style={{ textAlign: 'center' }}>Add weather</p> </Route>
@@ -66,7 +66,7 @@ const Dashboard =()=>{
             <Route path="/dashboard/settings" exact> <p style={{ textAlign: 'center' }}>settings</p> </Route>
             <Route path="/dashboard/about" exact> <p style={{ textAlign: 'center' }}>About</p> </Route>
         </Switch>
-    )
+    ),[])
 
 
    return(
@@ -79,7 +79,7 @@ const Dashboard =()=>{
                     state={state}
                     setState={setState}/>
                 <div className={classes.DashboardContent}>
-                     <Routes/>
+                     {Routes}
                 </div>
            </div>
         </>

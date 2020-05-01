@@ -2,15 +2,18 @@ Todos:
   New:
 //    ☐ Press Cmd/Ctrl+Enter to add a new todo @critical @high @low @today
 ☐ Connect GoogleMaps to web app @high
-☐ Make StartCruise Form work with backend API @high
-☐ make spinner bigger! maybe 70px @low
+☐ Make fetch methods universal for all fetches @today
 ☐ BackDrop loading after social login @low
 ☐ Add forecast to main Dashboard @low
 ☐ Add Social icons as links to the end of Menu list @low
 
+  ☐ BEFORE PRODUCTION @critical
+    ☐ disable setTimeouts @NewCruiseForm(line 50)
 Done:
 //    ✔ Press Alt+D to mark a todo as done
+✔ Make StartCruise Form work with backend API @high @done(20-05-01 11:01)
 ✔ Make StartCruise Form @high @started(20-04-27 12:38) @done(20-04-28 14:25) @lasted(1d1h47m47s)
+✔ make spinner bigger! maybe 70px @low @done(20-04-30 13:30)
   Cancelled:
 //    ✘ Press Alt+C to mark a todo as cancelled
   Timekeeping:
