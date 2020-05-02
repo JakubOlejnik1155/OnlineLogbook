@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import 'date-fns';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { TextField, Button, Typography } from '@material-ui/core';
 import SendTwoToneIcon from '@material-ui/icons/SendTwoTone';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { countryList } from './components/countres';
+import { countryList } from './constants/countres';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import Allert from './components/Allert';
@@ -16,6 +16,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Cookies from 'js-cookie';
 import connections from '../../connections';
+import { useStyles, CssTextField} from './constants/styleObject';
+
 
 const NewCruiseform = (props) => {
     const classes = useStyles();
@@ -36,6 +38,7 @@ const NewCruiseform = (props) => {
     };
 
     const onSubmit = (values, event) =>{
+
         const postCruise = async () =>{
             const token = Cookies.get('RefreshToken');
             const options = {
@@ -78,6 +81,15 @@ const NewCruiseform = (props) => {
         }
     };
 
+    function countryToFlag(isoCode) {
+        return typeof String.fromCodePoint !== "undefined"
+            ? isoCode
+                .toUpperCase()
+                .replace(/./g, char =>
+                    String.fromCodePoint(char.charCodeAt(0) + 127397)
+                )
+            : isoCode;
+    }
 
     useEffect(()=>{
         //check if user have been already started a cruise
@@ -132,7 +144,13 @@ const NewCruiseform = (props) => {
                     <CssCountryPick
                         id="combo-box-demo"
                         options={countryList}
-                        getOptionLabel={(option) => option}
+                        getOptionLabel={(option) => option.label}
+                            renderOption={option => (
+                                <span>
+                                    {countryToFlag(option.code)}
+                                    {option.label}
+                                </span>
+                            )}
                         size="small"
                         style={{ maxWidth: '194px', margin: '0 auto' }}
                         renderInput={(params) => <TextField
@@ -301,62 +319,29 @@ const NewCruiseform = (props) => {
      );
 };
 
-//styles components
-const useStyles = makeStyles((theme) => ({
-    GridContainer: {
-        width: '100%',
-        margin: 0,
-    },
-    noBottomMargin:{
-        marginBottom: 0,
-        padding: '0px !important'
-    },
-    paper: {
-        padding: "1vw",
-        textAlign: "center",
-        color: "black",
-        whiteSpace: "wrap",
-        background: "rgba(255, 255, 255, .9)",
-    },
-    buttonBgc: {
-        backgroundColor: 'rgb(66,133,235)',
-        '&:hover': {
-            backgroundColor: 'rgb(26,107,230)',
-        },
-    },
-    backdrop: {
-        marginTop: '60px',
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-        '& .MuiCircularProgress-root':{
-            width: '70px !important',
-            height: '70px !important',
-        }
-    },
-}))
-const CssTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: 'rgb(66,133,235)',
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: 'rgb(66,133,235)',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: 'rgb(66,133,235)',
-                borderWidth: 1.5,
+// export const CssTextField = withStyles({
+//     root: {
+//         '& label.Mui-focused': {
+//             color: 'rgb(66,133,235)',
+//         },
+//         '& .MuiInput-underline:after': {
+//             borderBottomColor: 'rgb(66,133,235)',
+//         },
+//         '& .MuiOutlinedInput-root': {
+//             '& fieldset': {
+//                 borderColor: 'rgb(66,133,235)',
+//                 borderWidth: 1.5,
 
-            },
-            '&:hover fieldset': {
-                borderColor: 'rgb(66,133,235)',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: 'rgb(66,133,235)',
-            },
-        },
-    },
-})(TextField);
+//             },
+//             '&:hover fieldset': {
+//                 borderColor: 'rgb(66,133,235)',
+//             },
+//             '&.Mui-focused fieldset': {
+//                 borderColor: 'rgb(66,133,235)',
+//             },
+//         },
+//     },
+// })(TextField);
 const CssCountryPick = withStyles({
     root: {
         '& label.Mui-focused': {
