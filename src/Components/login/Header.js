@@ -16,7 +16,6 @@ const LoginHeader = (props) => {
     const Auth = useContext(AuthApi)
 
     const responseFacebook = (response) => {
-        console.log(response);
         if(response.status !== "not_authorized" && response.status !== "unknown")
             addSocialUser(response.email, response.picture.data.url);
     };
@@ -25,7 +24,7 @@ const LoginHeader = (props) => {
         addSocialUser(response.profileObj.email, response.profileObj.imageUrl);
     };
     const responseGoogleFail = () => {
-        alert.error("something get wrong");
+        console.log("Google login disabled");
     };
     const addSocialUser = (email, pictureUrl) => {
         const data = {

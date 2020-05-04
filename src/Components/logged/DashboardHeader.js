@@ -3,11 +3,10 @@ import Cookies from 'js-cookie';
 import Logo from '../../images/logo.svg';
 import AuthApi from "../../authAPI";
 import { Link } from 'react-router-dom';
-import connections from '../connections';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IconButton from '@material-ui/core/IconButton';
 import UserProfilePicture from './Avatar';
-
+import {deleteRefreshToken} from './RoutesComponents/constants/functions'
 
 
 const DashBoardHeader = (props) => {
@@ -21,26 +20,6 @@ const DashBoardHeader = (props) => {
         Cookies.remove("pp");
     };
 
-    //deleting RT from DB
-    const deleteRefreshToken = () => {
-        const currentRefreshToken = Cookies.get("RefreshToken");
-        const data = {
-            RJwt: currentRefreshToken
-        };
-        const options = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        };
-        fetch(connections.authServer.concat("/api/user/logout"), options)
-            .then(response => {
-                if (response.ok) return response;
-                else throw Error(response.status.toString());
-            })
-            .catch(error => console.error(error))
-    };
 
     return (
         <header className="Dashboard__header DHeader">

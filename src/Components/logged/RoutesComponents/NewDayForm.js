@@ -22,7 +22,8 @@ const NewCruiseform = () => {
     const { register, handleSubmit, control } = useForm({ defaultValues });
 
     const onSubmit =(values) => {
-        console.log(values);
+        values.day.date = new Date().toJSON();
+        console.log(JSON.stringify(values));
     };
 
 
@@ -42,7 +43,6 @@ const NewCruiseform = () => {
                         <Typography variant="overline">mandatory data</Typography>
                     </Grid>
 
-
                     <Grid item xs={12} sm={6}>
                         <CssTextField
                             autoComplete="newStartingHabrour"
@@ -50,7 +50,7 @@ const NewCruiseform = () => {
                             label="starting harbor*"
                             variant="outlined"
                             size="small"
-                            name="day.harbour"
+                            name="day.startHarbor"
                             inputRef={register()}
                         />
                     </Grid>
@@ -59,12 +59,11 @@ const NewCruiseform = () => {
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"
-                            label="motohours*"
+                            label="engine Mth*"
                             variant="outlined"
                             size="small"
-                            name="day.motohours"
+                            name="day.engineMth"
                             inputRef={register()}
-
                         />
                     </Grid>
 

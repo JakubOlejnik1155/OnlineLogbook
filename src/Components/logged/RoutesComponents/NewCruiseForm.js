@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import 'date-fns';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -12,14 +12,15 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import Allert from './components/Allert';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Cookies from 'js-cookie';
 import connections from '../../connections';
 import { useStyles, CssTextField} from './constants/styleObject';
-
+import AuthApi from "../../../authAPI";
+import { countryToFlag, deleteRefreshToken, unauthorizedLogOut } from './constants/functions';
+import LoadingComponent from './components/LoadingComponent';
 
 const NewCruiseform = (props) => {
+    const Auth = useContext(AuthApi);
     const classes = useStyles();
     const { handleSubmit, register } = useForm();
     const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -52,6 +53,7 @@ const NewCruiseform = (props) => {
             const response = await fetch(connections.server.concat('/api/cruises'), options);
             return response.json();
         }
+        values.cruise.startDate = new Date().toJSON();
         const {boat, cruise} = values;
         if (boat.name === '' || boat.MMSI === '' || cruise.country === '' || cruise.sailingArea === '' || cruise.harbour === ''){
             return setAllert({...allert, open: true, msg: 'fill all required inputs marked by *', title: 'bad inputs', type: 'error'})
@@ -62,17 +64,28 @@ const NewCruiseform = (props) => {
             setIsLoading(true);
             postCruise()
                 .then(response => {
-                    if(response.error){
-                        setIsLoading(false);
-                        return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
-                    }
-                    else if (response.success){
-                        setIsLoading(false);
-                        setAllert({ ...allert, open:true,type:'success', title: 'success', msg: 'cruise was created'});
-                    }
-                    else {
-                        setIsLoading(false);
-                        setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                    //unauthorized
+                    if (response.error && response.error.code === 401) {
+                        console.log('unauthorized');
+                        setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                        setTimeout(() => {
+                            deleteRefreshToken();
+                             Auth.setAuth(false);
+                            unauthorizedLogOut();
+                        }, 3000)
+                    }else{
+                        if(response.error){
+                            setIsLoading(false);
+                            return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
+                        }
+                        else if (response.success){
+                            setIsLoading(false);
+                            setAllert({ ...allert, open:true,type:'success', title: 'success', msg: 'cruise was created'});
+                        }
+                        else {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                        }
                     }
                 })
         }catch(error){
@@ -80,16 +93,6 @@ const NewCruiseform = (props) => {
             setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
         }
     };
-
-    function countryToFlag(isoCode) {
-        return typeof String.fromCodePoint !== "undefined"
-            ? isoCode
-                .toUpperCase()
-                .replace(/./g, char =>
-                    String.fromCodePoint(char.charCodeAt(0) + 127397)
-                )
-            : isoCode;
-    }
 
     useEffect(()=>{
         //check if user have been already started a cruise
@@ -104,24 +107,35 @@ const NewCruiseform = (props) => {
             const response = await fetch(connections.server.concat('/api/cruises/current'), options);
             return response.json();
         }
-
         try{
             //TODO: delete timeout before production
             setTimeout(()=>{
                 CheckCurrentCruise()
                     .then(response => {
-                        if (response.data.length === 1) {
-                            setIsFormAvialiable(false);
-                            setIsLoading(false)
-                        }
-                        else {
-                            setIsFormAvialiable(true);
-                            setIsLoading(false)
+                        //unauthorized
+                        if(response.error && response.error.code === 401){
+                            console.log('unauthorized');
+                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                            setTimeout(() => {
+                                deleteRefreshToken();
+                                Auth.setAuth(false);
+                                unauthorizedLogOut();
+                            },3000)
+                        }else{
+                        //
+                            if (response.data.length === 1) {
+                                setIsFormAvialiable(false);
+                                setIsLoading(false)
+                            }
+                            else {
+                                setIsFormAvialiable(true);
+                                setIsLoading(false)
+                            }
                         }
                     })
             }, 1000)
         }catch(error){console.log(error)}
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
     const Form = () =>(
@@ -295,12 +309,6 @@ const NewCruiseform = (props) => {
         </Paper>
     );
 
-    const LoadingComponent = () => (
-        <Backdrop className={classes.backdrop} open={isLoadeing}>
-            <CircularProgress color="inherit" />
-        </Backdrop>
-    );
-
     return (
         <Grid className={classes.GridContainer}
             container
@@ -309,7 +317,7 @@ const NewCruiseform = (props) => {
             alignItems="center"
         >
             <Grid item xs={12} md={8} lg={6} xl={4}>
-                <LoadingComponent />
+                <LoadingComponent isLoadeing={isLoadeing}/>
                 {isFormAvialiable === false ? <FormDisable /> : <Form/>}
             </Grid>
             <Allert
@@ -319,29 +327,6 @@ const NewCruiseform = (props) => {
      );
 };
 
-// export const CssTextField = withStyles({
-//     root: {
-//         '& label.Mui-focused': {
-//             color: 'rgb(66,133,235)',
-//         },
-//         '& .MuiInput-underline:after': {
-//             borderBottomColor: 'rgb(66,133,235)',
-//         },
-//         '& .MuiOutlinedInput-root': {
-//             '& fieldset': {
-//                 borderColor: 'rgb(66,133,235)',
-//                 borderWidth: 1.5,
-
-//             },
-//             '&:hover fieldset': {
-//                 borderColor: 'rgb(66,133,235)',
-//             },
-//             '&.Mui-focused fieldset': {
-//                 borderColor: 'rgb(66,133,235)',
-//             },
-//         },
-//     },
-// })(TextField);
 const CssCountryPick = withStyles({
     root: {
         '& label.Mui-focused': {
