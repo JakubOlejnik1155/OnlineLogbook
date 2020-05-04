@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useContext, useEffect} from 'react';
 import Grid from '@material-ui/core/Grid'
+
 import { Paper, Typography, Button, Switch, withStyles} from '@material-ui/core';
 import { CssTextField } from './constants/styleObject';
 import SendTwoToneIcon from '@material-ui/icons/SendTwoTone';
 import { useForm, Controller} from 'react-hook-form';
+import { Link, Redirect } from 'react-router-dom';
 import {useStyles} from './constants/styleObject'
 import {StyledSlider} from './components/StyledSlider';
+import AuthApi from '../../../authAPI';
+import LoadingComponent from './components/LoadingComponent';
+import Allert from './components/Allert';
+import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from './constants/functions';
+
 
 const defaultValues = {
     day:{
@@ -17,13 +24,109 @@ const defaultValues = {
 
 
 const NewCruiseform = () => {
+    const Auth = useContext(AuthApi);
     const classes = useStyles();
-
     const { register, handleSubmit, control } = useForm({ defaultValues });
+    const [isFormAvialiable, setIsFormAvialiable] = React.useState(undefined);
+    const [isLoadeing, setIsLoading] = React.useState(true);
+    const [isRedirection, setIsRedirection] = React.useState(false);
+    const [allert, setAllert] = React.useState({
+        open: false,
+        variant: 'filled',
+        duration: 4000,
+        type: 'success',
+        title: 'success',
+        msg: 'success msg',
+    });
+    const [disableFormProps, setDisableFormProps] = React.useState({ msg1: '', link: '', linkMsg: '', msg2: ''})
 
-    const onSubmit =(values) => {
+
+    useEffect(()=>{
+        try{
+            //TODO: delete timeout before production
+            setTimeout(()=>{
+                GetRequestFunction('/api/days/current')
+                    .then(response => {
+                        //unauthorized
+                        if (response.error && response.error.code === 401) {
+                            console.log('unauthorized');
+                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                            setTimeout(() => {
+                                Auth.setAuth(false);
+                                unauthorizedLogOut();
+                            }, 3000)
+                        } else {
+                            //
+                            if (response.error && response.error.msg === 'there is no active cruise'){
+                                setDisableFormProps({
+                                    msg1: "Oops! It looks like you don't have active cruise.",
+                                    link: '/dashboard/start/cruise',
+                                    linkMsg: 'Start it',
+                                    msg2: 'before starting a day!'
+                                });
+                                setIsFormAvialiable(false);
+                                setIsLoading(false)
+                            }else if (response.data.length === 1) {
+                                setDisableFormProps({
+                                    msg1: "Oops! It looks like you've already started a day.",
+                                    link: '/dashboard/finish/day',
+                                    linkMsg: 'Finish it',
+                                    msg2: 'before starting the next one'});
+                                setIsFormAvialiable(false);
+                                setIsLoading(false)
+                            }
+                            else {
+                                setIsFormAvialiable(true);
+                                setIsLoading(false)
+                            }
+                        }
+                    })
+            },1000)
+        }catch(error){console.log(error)}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+
+
+    const onSubmit = (values) => {
         values.day.date = new Date().toJSON();
-        console.log(JSON.stringify(values));
+        const {day} = values
+        console.log(day);
+        if(day.startHarbour === '' || day.engineMth === ''){
+            return setAllert({ ...allert, open: true, msg: 'fill all required inputs marked by *', title: 'bad inputs', type: 'error' })
+        }
+        try{
+            setIsLoading(true);
+            PostRequestFunction('/api/days', values)
+                .then(response => {
+                    //unauthorized
+                    if (response.error && response.error.code === 401) {
+                        console.log('unauthorized');
+                        setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                        setTimeout(() => {
+                            Auth.setAuth(false);
+                            unauthorizedLogOut();
+                        }, 3000)
+                    } else {
+                        if (response.error) {
+                            setIsLoading(false);
+                            return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
+                        }
+                        else if (response.success) {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'success', title: 'success', msg: 'day was started. Happy Boating!' });
+                            setTimeout(() => setIsRedirection(true), 4000);
+                        }
+                        else {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                        }
+                    }
+                })
+        } catch (error) {
+            setIsLoading(false);
+            setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+        }
+
     };
 
 
@@ -70,7 +173,7 @@ const NewCruiseform = () => {
 
                     <Grid item xs={12} style={{ borderBottom: '1px solid black' }}></Grid>
                     <Grid item xs={12}>
-                        <Typography variant="overline"> optional stuff level</Typography>
+                        <Typography variant="overline"> check before sailing </Typography>
                     </Grid>
 
                     <Grid className={classes.GridContainer}
@@ -132,18 +235,46 @@ const NewCruiseform = () => {
             </form>
         </Paper>
     );
+    const FormDisable = ({disableFormProps}) => (
+        <Paper className={classes.paper}>
+            <Grid className={classes.GridContainer}
+                container
+                spacing={3}
+                justify="center"
+                alignItems="center"
+            >
+                <Grid item xs={12} >
+                    <p>{disableFormProps.msg1} </p>
+                    <p><Link to={disableFormProps.link} style={{ color: 'rgb(66,133,235)', textDecoration: 'underline' }}>{disableFormProps.linkMsg}</Link> {disableFormProps.msg2}</p>
+                </Grid>
+            </Grid>
+        </Paper>
+    );
+
+    const renderRedirect = () => {
+        if (isRedirection) {
+            return <Redirect to='/dashboard' />
+        }
+    };
 
     return (
-        <Grid className={classes.GridContainer}
-            container
-            spacing={5}
-            justify="center"
-            alignItems="center"
-        >
-            <Grid item xs={12} md={8} lg={6} xl={4}>
-               <Form/>
+        <>
+            {renderRedirect()}
+            <Grid className={classes.GridContainer}
+                container
+                spacing={5}
+                justify="center"
+                alignItems="center"
+            >
+                <Grid item xs={12} md={8} lg={6} xl={4}>
+                    <LoadingComponent isLoadeing={isLoadeing} />
+                    {isFormAvialiable === false ? <FormDisable disableFormProps={disableFormProps}/> : <Form />}
+                </Grid>
+                <Allert
+                    allert={allert}
+                    setAllert={setAllert} />
             </Grid>
-        </Grid>
+        </>
     );
 }
 

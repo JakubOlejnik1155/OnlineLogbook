@@ -11,12 +11,10 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import Allert from './components/Allert';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import connections from '../../connections';
+import { Link, Redirect } from 'react-router-dom';
 import { useStyles, CssTextField} from './constants/styleObject';
 import AuthApi from "../../../authAPI";
-import { countryToFlag, deleteRefreshToken, unauthorizedLogOut } from './constants/functions';
+import { countryToFlag, unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from './constants/functions';
 import LoadingComponent from './components/LoadingComponent';
 
 const NewCruiseform = (props) => {
@@ -26,6 +24,12 @@ const NewCruiseform = (props) => {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [isFormAvialiable, setIsFormAvialiable] = React.useState(undefined);
     const [isLoadeing, setIsLoading] = React.useState(true);
+    const [isRedirection, setIsRedirection] = React.useState(false);
+    const renderRedirect = () => {
+        if (isRedirection) {
+            return <Redirect to='/dashboard' />
+        }
+    }
     const [allert, setAllert] = React.useState({
         open: false,
         variant: 'filled',
@@ -40,19 +44,6 @@ const NewCruiseform = (props) => {
 
     const onSubmit = (values, event) =>{
 
-        const postCruise = async () =>{
-            const token = Cookies.get('RefreshToken');
-            const options = {
-                method: 'POST',
-                headers: {
-                    'authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(values)
-            }
-            const response = await fetch(connections.server.concat('/api/cruises'), options);
-            return response.json();
-        }
         values.cruise.startDate = new Date().toJSON();
         const {boat, cruise} = values;
         if (boat.name === '' || boat.MMSI === '' || cruise.country === '' || cruise.sailingArea === '' || cruise.harbour === ''){
@@ -62,14 +53,13 @@ const NewCruiseform = (props) => {
             return setAllert({...allert, open: true, type: 'warning', title: "incorrect MMSI", msg: "MMSI number have nine digits" })
         try{
             setIsLoading(true);
-            postCruise()
+            PostRequestFunction('/api/cruises', values)
                 .then(response => {
                     //unauthorized
                     if (response.error && response.error.code === 401) {
                         console.log('unauthorized');
                         setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
                         setTimeout(() => {
-                            deleteRefreshToken();
                              Auth.setAuth(false);
                             unauthorizedLogOut();
                         }, 3000)
@@ -81,6 +71,7 @@ const NewCruiseform = (props) => {
                         else if (response.success){
                             setIsLoading(false);
                             setAllert({ ...allert, open:true,type:'success', title: 'success', msg: 'cruise was created'});
+                            setTimeout(()=>setIsRedirection(true), 4000);
                         }
                         else {
                             setIsLoading(false);
@@ -95,29 +86,16 @@ const NewCruiseform = (props) => {
     };
 
     useEffect(()=>{
-        //check if user have been already started a cruise
-        const CheckCurrentCruise = async () => {
-            const token = Cookies.get('RefreshToken');
-            const options = {
-                method: 'GET',
-                headers:{
-                    'authorization':`Bearer ${token}`
-                }
-            };
-            const response = await fetch(connections.server.concat('/api/cruises/current'), options);
-            return response.json();
-        }
         try{
             //TODO: delete timeout before production
             setTimeout(()=>{
-                CheckCurrentCruise()
+                GetRequestFunction("/api/cruises/current")
                     .then(response => {
                         //unauthorized
                         if(response.error && response.error.code === 401){
                             console.log('unauthorized');
                             setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
                             setTimeout(() => {
-                                deleteRefreshToken();
                                 Auth.setAuth(false);
                                 unauthorizedLogOut();
                             },3000)
@@ -303,27 +281,30 @@ const NewCruiseform = (props) => {
             >
                 <Grid item xs={12} >
                     <p>Oops! It looks like you've already started a cruise. </p>
-                    <p><Link to="/dashboard/finish/cruise" style={{color: 'rgb(66,133,235)'}}>Finish it</Link> before starting the next one</p>
+                    <p><Link to="/dashboard/finish/cruise" style={{ color: 'rgb(66,133,235)', textDecoration: 'underline'}}>Finish it</Link> before starting the next one</p>
                 </Grid>
             </Grid>
         </Paper>
     );
 
     return (
-        <Grid className={classes.GridContainer}
-            container
-            spacing={5}
-            justify="center"
-            alignItems="center"
-        >
-            <Grid item xs={12} md={8} lg={6} xl={4}>
-                <LoadingComponent isLoadeing={isLoadeing}/>
-                {isFormAvialiable === false ? <FormDisable /> : <Form/>}
+        <>
+            {renderRedirect()}
+            <Grid className={classes.GridContainer}
+                container
+                spacing={5}
+                justify="center"
+                alignItems="center"
+            >
+                <Grid item xs={12} md={8} lg={6} xl={4}>
+                    <LoadingComponent isLoadeing={isLoadeing}/>
+                    {isFormAvialiable === false ? <FormDisable /> : <Form/>}
+                </Grid>
+                <Allert
+                    allert={allert}
+                    setAllert={setAllert}/>
             </Grid>
-            <Allert
-                allert={allert}
-                setAllert={setAllert}/>
-        </Grid>
+        </>
      );
 };
 

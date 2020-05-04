@@ -38,3 +38,29 @@ export const unauthorizedLogOut = () => {
     Cookies.remove("pp");
     return window.location.reload();
 }
+
+export const GetRequestFunction = async (concatURL) => {
+    const token = Cookies.get('RefreshToken');
+    const options = {
+        method: 'GET',
+        headers: {
+            'authorization': `Bearer ${token}`
+        }
+    };
+    const response = await fetch(connections.server.concat(concatURL), options);
+    return response.json();
+};
+
+export const PostRequestFunction = async (concatURL, data) => {
+    const token = Cookies.get('RefreshToken');
+    const options = {
+        method: 'POST',
+        headers: {
+            'authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+    const response = await fetch(connections.server.concat(concatURL), options);
+    return response.json();
+};
