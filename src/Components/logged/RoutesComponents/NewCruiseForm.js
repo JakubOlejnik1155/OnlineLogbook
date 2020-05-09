@@ -57,7 +57,6 @@ const NewCruiseform = (props) => {
                 .then(response => {
                     //unauthorized
                     if (response.error && response.error.code === 401) {
-                        console.log('unauthorized');
                         setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
                         setTimeout(() => {
                              Auth.setAuth(false);

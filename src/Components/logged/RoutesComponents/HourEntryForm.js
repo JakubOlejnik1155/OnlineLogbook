@@ -15,7 +15,7 @@ import Allert from './components/Allert';
 import { useStyles } from './constants/styleObject'
 import LoadingComponent from './components/LoadingComponent';
 import { CssTextField } from './constants/styleObject';
-import { convertDMS } from './constants/functions';
+import { convertDMS, PostRequestFunction, unauthorizedLogOut } from './constants/functions';
 
 const defaultValues= {
     data:{
@@ -42,6 +42,7 @@ const HourEntryForm = (props) => {
     })
     const { register, handleSubmit, control } = useForm({ defaultValues});
     const [isRedirection, setIsRedirection] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const handleGpsPositionChange = (e, { dd, dms, dmsArray }) => {
         position.lat = dd[0];
@@ -101,14 +102,42 @@ const HourEntryForm = (props) => {
         let hour = new Date().getHours();
         const minutes = new Date().getMinutes();
         if(minutes >= 30) {
-            if(hour < 23) hour = 1;
-            else if (hour === 23 ) hour = 0
+            if (hour === 23 ) hour = 0
             else hour += 1;
         }
-            values.data.hour = hour;
+        values.data.hour = hour;
+        try{
+            detectMobile.isMobile() && window.scrollTo(0,0);
+            setIsLoading(true);
+            PostRequestFunction('/api/days/hourly',values)
+                .then(response => {
+                    if (response.error && response.error.code === 401) {
+                        setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                        setTimeout(() => {
+                            Auth.setAuth(false);
+                            unauthorizedLogOut();
+                        }, 3000)
+                    }else{
+                        if (response.error) {
+                            setIsLoading(false);
+                            return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
+                        }
+                        else if (response.success) {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'success', title: 'success', msg: 'hour entry was added!' });
+                            setTimeout(() => setIsRedirection(true), 4000);
+                        }
+                        else {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                        }
+                    }
+                })
 
-        console.log(JSON.stringify(values));
-
+        }catch(error){
+            setIsLoading(false);
+            setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+        }
     };
 
     const getGPSHandler = async() => {
@@ -313,6 +342,7 @@ const HourEntryForm = (props) => {
                 alignItems="center"
             >
                 <Grid item xs={12} md={8} lg={6} xl={5}>
+                    <LoadingComponent isLoadeing={isLoading} />
                     <Form/>
                 </Grid>
                 <Allert
