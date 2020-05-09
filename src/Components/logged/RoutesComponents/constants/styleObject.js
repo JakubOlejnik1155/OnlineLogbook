@@ -38,7 +38,18 @@ export const useStyles = makeStyles((theme) => ({
     },
     textAlignLeft:{
         textAlign: 'left',
+    },
+    GPSInput: {
+        padding: '6px',
+        fontSize: '16px',
+        border: '2px solid rgb(66,133,235)',
+        borderRadius: '5px',
+        outline: 'none',
+        width: '100%',
+        maxWidth: '275px',
+        backgroundColor: 'transparent',
     }
+
 }));
 
 
