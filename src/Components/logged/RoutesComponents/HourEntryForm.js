@@ -33,8 +33,8 @@ const HourEntryForm = (props) => {
     const matchesXS = useMediaQuery('(max-width:600px)');
     const classes = useStyles();
     let position = {
-        lat: '',
-        lng: ''
+        lat: 0,
+        lng: 0
     };
     const [mobilePosition, setMobilePosition] = React.useState({
         lat: 0,
@@ -64,7 +64,9 @@ const HourEntryForm = (props) => {
 
     const onSubmit = (values) => {
 
-        //TODO: required validation must have inputs
+        // required validation must have inputs
+        if(values.data.log === '' || values.data.longitude === 0 || values.data.latitude === 0)
+            return setAllert({ ...allert, open: true, msg: 'fill all required inputs marked by *', title: 'bad inputs', type: 'error' })
         if (detectMobile.isMobile()){
             values.data.latitude = mobilePosition.lat;
             values.data.longitude = mobilePosition.lng;
@@ -95,12 +97,15 @@ const HourEntryForm = (props) => {
         if (isNaN(LOG)) return setAllert({ ...allert, open: true, type: 'error', title: 'invalid LOG', msg: 'please enter valid LOG' });
         else values.data.log = LOG;
 
-
-        //TODO: hours  rounded
+        //hour round
         let hour = new Date().getHours();
         const minutes = new Date().getMinutes();
-        if(minutes >= 30) hour += 1;
-        values.data.hour = hour;
+        if(minutes >= 30) {
+            if(hour < 23) hour = 1;
+            else if (hour === 23 ) hour = 0
+            else hour += 1;
+        }
+            values.data.hour = hour;
 
         console.log(JSON.stringify(values));
 
@@ -137,12 +142,12 @@ const HourEntryForm = (props) => {
                                     variant="outlined"
                                     color="secondary"
                                     style={{marginTop: '10px'}}
-                                   > first click to get position</Button>
+                                   > first click to get position*</Button>
                                 <Typography variant="body2" style={{color: 'gray', fontSize: '11px'}}>this may take a while</Typography>
                             </>
                         ) : (
                             <>
-                                <Typography variant="overline" style={{ width: '100%', display: 'block' }}>GPS position</Typography>
+                                <Typography variant="overline" style={{ width: '100%', display: 'block' }}>GPS position*</Typography>
                                 <CoordinateInput onChange={handleGpsPositionChange} className={classes.GPSInput} />
                             </>
                         )}
@@ -204,7 +209,7 @@ const HourEntryForm = (props) => {
                         <CssTextField
                             autoComplete="newLog"
                             id="outlined-basic"
-                            label="log"
+                            label="log*"
                             variant="outlined"
                             size="small"
                             type="text"
