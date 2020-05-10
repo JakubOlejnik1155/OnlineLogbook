@@ -6,6 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import CoordinateInput from "react-coordinate-input";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useMobileDetect from 'use-mobile-detect-hook';
+import Cookies from 'js-cookie'
 
 
 import AuthApi from '../../../authAPI';
@@ -34,6 +35,7 @@ const HourEntryForm = (props) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [isFormAvaliable, setIsFormAvaliable] = React.useState(undefined);
     const [disableFormProps, setDisableFormProps] = React.useState({ msg1: '', link: '', linkMsg: '', msg2: '' });
+    const [gpsModule, setGpsModule] = React.useState(true);
     const classes = useStyles();
     let position = {
         lat: 0,
@@ -45,6 +47,7 @@ const HourEntryForm = (props) => {
     })
 
     React.useEffect(()=>{
+        if (detectMobile.isMobile() && Cookies.get("GPSmoduleDisabled")) setGpsModule(false)
         try{
             //TODO: delete timeout before production
             setTimeout(()=>{
@@ -199,7 +202,7 @@ const HourEntryForm = (props) => {
 
 
                     <Grid item xs={12} sm={5}>
-                        {detectMobile.isMobile() ? (
+                        {detectMobile.isMobile() && gpsModule ? (
                             <>
                                 <Input value={convertDMS(mobilePosition.lat, mobilePosition.lng)} style={{ width: '80%' }} inputProps={{ min: 0, style: { textAlign: 'center' } }} />
                                 <Button onClick={getGPSHandler}
@@ -208,11 +211,14 @@ const HourEntryForm = (props) => {
                                     style={{marginTop: '10px'}}
                                    > first click to get position*</Button>
                                 <Typography variant="body2" style={{color: 'gray', fontSize: '11px'}}>this may take a while</Typography>
+                                <Typography variant="body2" onClick={() => { Cookies.set("GPSmoduleDisabled", true, { expires: 365 }); setGpsModule(false)}} style={{ padding: '2px', width: '150px', margin: '0 auto' ,color: 'rgb(66,133,235)', textDecoration: 'underline', fontSize: '11px'}}>Use traditional input</Typography>
                             </>
                         ) : (
                             <>
                                 <Typography variant="overline" style={{ width: '100%', display: 'block' }}>GPS position*</Typography>
                                 <CoordinateInput onChange={handleGpsPositionChange} className={classes.GPSInput} />
+                                    {(detectMobile.isMobile() && Cookies.get("GPSmoduleDisabled")) && <Typography variant="body2" onClick={() => { Cookies.remove("GPSmoduleDisabled"); setGpsModule(true) }} style={{ padding: '2px', width: '150px', margin: '0 auto', color: 'rgb(66,133,235)', textDecoration: 'underline', fontSize: '11px' }}>Use Mobile GPS module</Typography>
+}
                             </>
                         )}
                     </Grid>
