@@ -5,14 +5,14 @@ import { Paper, Typography, Button, Switch, withStyles} from '@material-ui/core'
 import { CssTextField } from './constants/styleObject';
 import SendTwoToneIcon from '@material-ui/icons/SendTwoTone';
 import { useForm, Controller} from 'react-hook-form';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {useStyles} from './constants/styleObject'
 import {StyledSlider} from './components/StyledSlider';
 import AuthApi from '../../../authAPI';
 import LoadingComponent from './components/LoadingComponent';
 import Allert from './components/Allert';
 import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from './constants/functions';
-
+import FormDisable from './components/FormDisable';
 
 const defaultValues = {
     day:{
@@ -66,7 +66,7 @@ const NewCruiseform = () => {
                                 });
                                 setIsFormAvialiable(false);
                                 setIsLoading(false)
-                            }else if (response.data.length === 1) {
+                            }else if (response.data && response.data.length === 1) {
                                 setDisableFormProps({
                                     msg1: "Oops! It looks like you've already started a day.",
                                     link: '/dashboard/finish/day',
@@ -233,21 +233,6 @@ const NewCruiseform = () => {
                     </Grid>
                 </Grid>
             </form>
-        </Paper>
-    );
-    const FormDisable = ({disableFormProps}) => (
-        <Paper className={classes.paper}>
-            <Grid className={classes.GridContainer}
-                container
-                spacing={3}
-                justify="center"
-                alignItems="center"
-            >
-                <Grid item xs={12} >
-                    <p>{disableFormProps.msg1} </p>
-                    <p><Link to={disableFormProps.link} style={{ color: 'rgb(66,133,235)', textDecoration: 'underline' }}>{disableFormProps.linkMsg}</Link> {disableFormProps.msg2}</p>
-                </Grid>
-            </Grid>
         </Paper>
     );
 

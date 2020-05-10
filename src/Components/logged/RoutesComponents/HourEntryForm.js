@@ -8,14 +8,13 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useMobileDetect from 'use-mobile-detect-hook';
 
 
-
-
 import AuthApi from '../../../authAPI';
 import Allert from './components/Allert';
 import { useStyles } from './constants/styleObject'
 import LoadingComponent from './components/LoadingComponent';
 import { CssTextField } from './constants/styleObject';
-import { convertDMS, PostRequestFunction, unauthorizedLogOut } from './constants/functions';
+import { convertDMS, PostRequestFunction, unauthorizedLogOut, GetRequestFunction } from './constants/functions';
+import FormDisable from './components/FormDisable';
 
 const defaultValues= {
     data:{
@@ -25,12 +24,16 @@ const defaultValues= {
     }
 }
 
-
 const HourEntryForm = (props) => {
     const Auth = React.useContext(AuthApi);
     const detectMobile = useMobileDetect();
     const matchesSM = useMediaQuery('(min-width:600px)');
     const matchesXS = useMediaQuery('(max-width:600px)');
+    const { register, handleSubmit, control } = useForm({ defaultValues });
+    const [isRedirection, setIsRedirection] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [isFormAvaliable, setIsFormAvaliable] = React.useState(undefined);
+    const [disableFormProps, setDisableFormProps] = React.useState({ msg1: '', link: '', linkMsg: '', msg2: '' });
     const classes = useStyles();
     let position = {
         lat: 0,
@@ -40,9 +43,41 @@ const HourEntryForm = (props) => {
         lat: 0,
         lng: 0
     })
-    const { register, handleSubmit, control } = useForm({ defaultValues});
-    const [isRedirection, setIsRedirection] = React.useState(false);
-    const [isLoading, setIsLoading] = React.useState(false);
+
+    React.useEffect(()=>{
+        try{
+            //TODO: delete timeout before production
+            setTimeout(()=>{
+                GetRequestFunction('/api/days/current')
+                    .then(response => {
+                        //unauthorized
+                        if (response.error && response.error.code === 401) {
+                            console.log('unauthorized');
+                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                            setTimeout(() => {
+                                Auth.setAuth(false);
+                                unauthorizedLogOut();
+                            }, 3000)
+                        } else {
+                            if (response.data && response.data.length === 1) {
+                                setIsFormAvaliable(true);
+                                setIsLoading(false)
+                            } else {
+                                setDisableFormProps({
+                                    msg1: "Oops! It looks like you have no active day.",
+                                    link: '/dashboard/start/day',
+                                    linkMsg: 'Start it',
+                                    msg2: 'before add hour entry'
+                                });
+                                setIsFormAvaliable(false);
+                                setIsLoading(false)
+                            }
+                        }
+                    })
+            }, 1000)
+        }catch(error){console.log(error)}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const handleGpsPositionChange = (e, { dd, dms, dmsArray }) => {
         position.lat = dd[0];
@@ -141,9 +176,9 @@ const HourEntryForm = (props) => {
     };
 
     const getGPSHandler = async() => {
-         if (navigator.geolocation){
-            navigator.geolocation.getCurrentPosition( pos =>{
-                setMobilePosition({ lat: pos.coords.latitude, lng: pos.coords.longitude})
+        if (navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(pos => {
+                setMobilePosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
             });
         }
     };
@@ -343,13 +378,12 @@ const HourEntryForm = (props) => {
             >
                 <Grid item xs={12} md={8} lg={6} xl={5}>
                     <LoadingComponent isLoadeing={isLoading} />
-                    <Form/>
+                    {isFormAvaliable === false ? <FormDisable disableFormProps={disableFormProps} /> : <Form />}
                 </Grid>
                 <Allert
                     allert={allert}
                     setAllert={setAllert} />
             </Grid>
-
         </>
      );
 }
