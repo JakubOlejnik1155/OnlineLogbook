@@ -13,6 +13,7 @@ import NewDayForm from './RoutesComponents/NewDayForm';
 import HourEntryForm from './RoutesComponents/HourEntryForm';
 import WeatherForm from './RoutesComponents/WeatherForm';
 import NewWaypoint from './RoutesComponents/NewWaypoint';
+import NewActionForm from "./RoutesComponents/NewActionForm";
 
 const useStyles = makeStyles((theme)=>({
     DashboardContent: {
@@ -59,7 +60,7 @@ const Dashboard =()=>{
             <Route path="/dashboard/start/day" exact> <NewDayForm /> </Route>
             <Route path="/dashboard/add" exact> <HourEntryForm/> </Route>
             <Route path="/dashboard/add/weather" exact> <WeatherForm /> </Route>
-            <Route path="/dashboard/add/action" exact> <p style={{ textAlign: 'center' }}>Add action</p> </Route>
+            <Route path="/dashboard/add/action" exact> <NewActionForm/> </Route>
             <Route path="/dashboard/add/waypoint" exact> <NewWaypoint /> </Route>
             <Route path="/dashboard/finish/cruise" exact> <p style={{ textAlign: 'center' }}>Finish cruise</p> </Route>
             <Route path="/dashboard/finish/day" exact> <p style={{ textAlign: 'center' }}>Finish Day</p> </Route>
