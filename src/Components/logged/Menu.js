@@ -16,7 +16,7 @@ import TrendingUpTwoToneIcon from '@material-ui/icons/TrendingUpTwoTone';
 import CancelScheduleSendTwoToneIcon from '@material-ui/icons/CancelScheduleSendTwoTone';
 import RoomTwoToneIcon from '@material-ui/icons/RoomTwoTone';
 import MenuLink from './MenuLink';
-
+import WbSunnyTwoToneIcon from '@material-ui/icons/WbSunnyTwoTone';
 
 
 
@@ -92,6 +92,7 @@ export default function Menu(props) {
                 <MenuLink link="/dashboard/add/weather" text="Add weather note"> <CloudTwoToneIcon className={classes.addIcon} /> </MenuLink>
                 <MenuLink link="/dashboard/add/action" text="Add on-board action"> <AddCommentTwoToneIcon className={classes.addIcon} /> </MenuLink>
                 <MenuLink link="/dashboard/add/waypoint" text="Add waypoint"> <RoomTwoToneIcon className={classes.addIcon} /> </MenuLink>
+                <MenuLink link="/dashboard/add/forecast" text="Received forecast"> <WbSunnyTwoToneIcon className={classes.addIcon} /> </MenuLink>
             </List>
             <Divider />
                 <List className={classes.danger}>

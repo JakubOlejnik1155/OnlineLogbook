@@ -55,7 +55,7 @@ const App =  () => {
             <Route
                 {...rest}
                 //TODO: Change to dashboard
-                render={() => !auth ? <Component /> : <Redirect to="/dashboard/add/action"/>}
+                render={() => !auth ? <Component /> : <Redirect to="/dashboard/add/forecast"/>}
             />
         )
     };
