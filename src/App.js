@@ -55,7 +55,7 @@ const App =  () => {
             <Route
                 {...rest}
                 //TODO: Change to dashboard
-                render={() => !auth ? <Component /> : <Redirect to="/dashboard/finish/day"/>}
+                render={() => !auth ? <Component /> : <Redirect to="/dashboard/finish/cruise"/>}
             />
         )
     };
