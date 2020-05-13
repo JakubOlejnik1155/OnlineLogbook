@@ -76,46 +76,55 @@ const FinishDay = () => {
 
     const onSubmit = (values) => {
 
-        if(values.data.endHarbor === '')
+        if(values.data.endHarbor === '' || values.data.endLOG === '' )
         return setAllert({ ...allert, open: true, msg: 'fill all required inputs marked by * ', title: 'empty input', type: 'error' });
 
-        if (values.data.marinaVHF < 0 || isNaN(parseInt(values.data.marinaVHF)))
-        return setAllert({ ...allert, open: true, type: 'error', title: 'invalid VHF channel', msg: 'please enter valid channel' });
-        else values.data.marinaVHF = parseInt(values.data.marinaVHF)
+        let LOG = parseFloat(values.data.endLOG.replace(',', '.'));
+        for (let i = 0; i < values.data.endLOG.length; i++) {
+            const code = values.data.endLOG.charAt(i).charCodeAt(0);
+            if ((code < 48 && code !== 46 && code !== 44) || code > 57)
+                LOG = NaN;
+        }
+        if (isNaN(LOG)) return setAllert({ ...allert, open: true, type: 'error', title: 'invalid LOG', msg: 'please enter valid LOG' });
+        else values.data.endLOG = LOG;
 
-        console.log(values);
-        // if (values.data.forecast === '')
-        //     return setAllert({ ...allert, open: true, msg: 'set forecast ', title: 'unknown type', type: 'error' })
-        // try {
-        //     setIsLoading(true);
-        //     PostRequestFunction('/api/days/forecast', values)
-        //         .then(response => {
-        //             if (response.error && response.error.code === 401) {
-        //                 setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
-        //                 setTimeout(() => {
-        //                     Auth.setAuth(false);
-        //                     unauthorizedLogOut();
-        //                 }, 3000)
-        //             } else {
-        //                 if (response.error) {
-        //                     setIsLoading(false);
-        //                     return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
-        //                 }
-        //                 else if (response.success) {
-        //                     setIsLoading(false);
-        //                     setAllert({ ...allert, open: true, type: 'success', title: 'success', msg: 'forecast was added!' });
-        //                     setTimeout(() => setIsRedirection(true), 4000);
-        //                 }
-        //                 else {
-        //                     setIsLoading(false);
-        //                     setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
-        //                 }
-        //             }
-        //         })
-        // } catch (error) {
-        //     setIsLoading(false);
-        //     setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
-        // }
+        if (values.data.marinaVHF !== ''){
+            if (values.data.marinaVHF < 0 || isNaN(parseInt(values.data.marinaVHF)))
+            return setAllert({ ...allert, open: true, type: 'error', title: 'invalid VHF channel', msg: 'please enter valid channel' });
+            else values.data.marinaVHF = parseInt(values.data.marinaVHF)
+        }else values.data.marinaVHF = 0;
+
+        try {
+            setIsLoading(true);
+            PostRequestFunction('/api/days/finish', values)
+                .then(response => {
+                    if (response.error && response.error.code === 401) {
+                        setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                        setTimeout(() => {
+                            Auth.setAuth(false);
+                            unauthorizedLogOut();
+                        }, 3000)
+                    } else {
+                        if (response.error) {
+                            setIsLoading(false);
+                            return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
+                        }
+                        else if (response.success) {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'success', title: 'success', msg: 'day was finished!' });
+                            setTimeout(() => setIsRedirection(true), 4000);
+                        }
+                        else {
+                            setIsLoading(false);
+                            setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                        }
+                    }
+                })
+        } catch (error) {
+            setIsLoading(false);
+            setAllert({ ...allert, open: true, type: 'error', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+        }
+
     };
 
     const Form = () => (
@@ -131,7 +140,7 @@ const FinishDay = () => {
                         <Typography variant="h5">End Sailing Day</Typography>
                     </Grid>
 
-                    <Grid item xs={12} >
+                    <Grid item xs={12} sm={6} >
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"
@@ -142,7 +151,18 @@ const FinishDay = () => {
                             inputRef={register()}
                         />
                     </Grid>
-                    <Grid item xs={12} >
+                    <Grid item xs={12} sm={6} >
+                        <CssTextField
+                            autoComplete="newStartingHabrour"
+                            id="outlined-basic"
+                            label="end LOG*"
+                            variant="outlined"
+                            size="small"
+                            name="data.endLOG"
+                            inputRef={register()}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"
@@ -154,7 +174,7 @@ const FinishDay = () => {
                         />
                     </Grid>
 
-                    <Grid item xs={12} >
+                    <Grid item xs={12} sm={6} >
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"

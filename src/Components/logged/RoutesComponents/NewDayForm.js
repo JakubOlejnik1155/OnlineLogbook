@@ -109,7 +109,6 @@ const NewCruiseform = () => {
         }
         if (isNaN(Mth)) return setAllert({ ...allert, open: true, type: 'error', title: 'invalid Mth', msg: 'please enter valid Mth' });
         else values.day.engineMth = Mth;
-        console.log(day);
         try{
             setIsLoading(true);
             PostRequestFunction('/api/days', values)
