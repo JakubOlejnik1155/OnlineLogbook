@@ -23,6 +23,12 @@ export const useStyles = makeStyles((theme) => ({
             backgroundColor: 'rgb(26,107,230)',
         },
     },
+    dangerButton:{
+        backgroundColor: 'rgb(231,87,23)',
+        '&:hover': {
+            backgroundColor: 'rgb(231,87,23)',
+        },
+    },
     backdrop: {
         marginTop: '60px',
         zIndex: theme.zIndex.drawer + 1,

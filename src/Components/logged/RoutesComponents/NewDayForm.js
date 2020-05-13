@@ -90,10 +90,26 @@ const NewCruiseform = () => {
     const onSubmit = (values) => {
         values.day.date = new Date().toJSON();
         const {day} = values
-        console.log(day);
-        if(day.startHarbour === '' || day.engineMth === ''){
+        if (day.startHarbour === '' || day.engineMth === '' || day.startLOG === ''){
             return setAllert({ ...allert, open: true, msg: 'fill all required inputs marked by *', title: 'bad inputs', type: 'error' })
         }
+        let LOG = parseFloat(values.day.startLOG.replace(',', '.'));
+        for (let i = 0; i < values.day.startLOG.length; i++) {
+            const code = values.day.startLOG.charAt(i).charCodeAt(0);
+            if ((code < 48 && code !== 46 && code !== 44) || code > 57)
+            LOG = NaN;
+        }
+        if (isNaN(LOG)) return setAllert({ ...allert, open: true, type: 'error', title: 'invalid LOG', msg: 'please enter valid LOG' });
+        else values.day.startLOG = LOG;
+        let Mth = parseFloat(values.day.engineMth.replace(',', '.'));
+        for (let i = 0; i < values.day.engineMth.length; i++) {
+            const code = values.day.engineMth.charAt(i).charCodeAt(0);
+            if ((code < 48 && code !== 46 && code !== 44) || code > 57)
+            Mth = NaN;
+        }
+        if (isNaN(Mth)) return setAllert({ ...allert, open: true, type: 'error', title: 'invalid Mth', msg: 'please enter valid Mth' });
+        else values.day.engineMth = Mth;
+        console.log(day);
         try{
             setIsLoading(true);
             PostRequestFunction('/api/days', values)
@@ -146,7 +162,7 @@ const NewCruiseform = () => {
                         <Typography variant="overline">mandatory data</Typography>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"
@@ -158,7 +174,7 @@ const NewCruiseform = () => {
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                         <CssTextField
                             autoComplete="newStartingHabrour"
                             id="outlined-basic"
@@ -166,6 +182,18 @@ const NewCruiseform = () => {
                             variant="outlined"
                             size="small"
                             name="day.engineMth"
+                            inputRef={register()}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                        <CssTextField
+                            autoComplete="newStartLOG"
+                            id="outlined-basic"
+                            label="start LOG*"
+                            variant="outlined"
+                            size="small"
+                            name="day.startLOG"
                             inputRef={register()}
                         />
                     </Grid>

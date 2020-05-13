@@ -15,6 +15,7 @@ import WeatherForm from './RoutesComponents/WeatherForm';
 import NewWaypoint from './RoutesComponents/NewWaypoint';
 import NewActionForm from "./RoutesComponents/NewActionForm";
 import ForecastEntryForm from "./RoutesComponents/ForecastEntryForm";
+import FinishDay from './RoutesComponents/FinishDay';
 
 const useStyles = makeStyles((theme)=>({
     DashboardContent: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme)=>({
 
 
 
-const Dashboard =()=>{
+const Dashboard = () => {
     const Auth = useContext(AuthApi);
     const classes = useStyles();
     //STATES WITH MENU TOGGLE
@@ -51,7 +52,6 @@ const Dashboard =()=>{
             }
         };
         readCookie();
-
     });
 
     const Routes = React.useMemo(() => (
@@ -65,7 +65,7 @@ const Dashboard =()=>{
             <Route path="/dashboard/add/waypoint" exact> <NewWaypoint /> </Route>
             <Route path="/dashboard/add/forecast" exact> <ForecastEntryForm /> </Route>
             <Route path="/dashboard/finish/cruise" exact> <p style={{ textAlign: 'center' }}>Finish cruise</p> </Route>
-            <Route path="/dashboard/finish/day" exact> <p style={{ textAlign: 'center' }}>Finish Day</p> </Route>
+            <Route path="/dashboard/finish/day" exact> <FinishDay /></Route>
             <Route path="/dashboard/cruises" exact> <p style={{ textAlign: 'center' }}>My Cruises</p> </Route>
             <Route path="/dashboard/current-trip-days" exact> <p style={{ textAlign: 'center' }}>Days of current Trip</p> </Route>
             <Route path="/dashboard/map" exact> <p style={{ textAlign: 'center' }}>Map</p> </Route>
