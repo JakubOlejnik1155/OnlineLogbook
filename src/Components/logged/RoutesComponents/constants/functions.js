@@ -65,6 +65,19 @@ export const PostRequestFunction = async (concatURL, data) => {
     return response.json();
 };
 
+export const PatchRequestFunction = async (concatURL) => {
+    const token = Cookies.get('RefreshToken');
+    const options = {
+        method: 'PATCH',
+        headers: {
+            'authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }
+    const response = await fetch(connections.server.concat(concatURL), options);
+    return response.json();
+};
+
 function toDegreesMinutesAndSeconds(coordinate) {
     var absolute = Math.abs(coordinate);
     var degrees = Math.floor(absolute);
