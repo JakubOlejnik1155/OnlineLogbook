@@ -30,36 +30,10 @@ const FinishCruise = () => {
         msg: 'success msg',
     });
 
-    React.useEffect(() => {
+    React.useEffect( () => {
         try {
             //TODO: delete timeout before production
             setTimeout(() => {
-                GetRequestFunction('/api/days/current')
-                    .then(response => {
-                        //unauthorized
-                        if (response.error && response.error.code === 401) {
-                            console.log('unauthorized');
-                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
-                            setTimeout(() => {
-                                Auth.setAuth(false);
-                                unauthorizedLogOut();
-                            }, 3000)
-                        } else {
-                            if (response.data && response.data.length === 1) {
-                                setDisableFormProps({
-                                    msg1: "Oops! It looks like you have active day. You need to ",
-                                    link: '/dashboard/finish/day',
-                                    linkMsg: 'finish it',
-                                    msg2: 'to be able to finish the whole cruise '
-                                });
-                                setIsFormAvaliable(false);
-                                setIsLoading(false)
-                            } else {
-                                setIsFormAvaliable(true);
-                                setIsLoading(false)
-                            }
-                        }
-                    })
                 GetRequestFunction('/api/cruises/current')
                     .then(response => {
                         //unauthorized
@@ -72,8 +46,32 @@ const FinishCruise = () => {
                             }, 3000)
                         } else {
                             if (response.data && response.data.length === 1) {
-                                setIsFormAvaliable(true);
-                                setIsLoading(false)
+                                GetRequestFunction('/api/days/current')
+                                    .then(response => {
+                                        //unauthorized
+                                        if (response.error && response.error.code === 401) {
+                                            console.log('unauthorized');
+                                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                                            setTimeout(() => {
+                                                Auth.setAuth(false);
+                                                unauthorizedLogOut();
+                                            }, 3000)
+                                        } else {
+                                            if (response.data && response.data.length === 1) {
+                                                setDisableFormProps({
+                                                    msg1: "Oops! It looks like you have active day. You need to ",
+                                                    link: '/dashboard/finish/day',
+                                                    linkMsg: 'finish it',
+                                                    msg2: 'to be able to finish the whole cruise '
+                                                });
+                                                setIsFormAvaliable(false);
+                                                setIsLoading(false)
+                                            } else {
+                                                setIsFormAvaliable(true);
+                                                setIsLoading(false)
+                                            }
+                                        }
+                                    })
                             } else {
                                 setDisableFormProps({
                                     msg1: "Oops! It looks like you have no active cruise. You need to ",
