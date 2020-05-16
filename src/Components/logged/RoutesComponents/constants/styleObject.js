@@ -54,6 +54,38 @@ export const useStyles = makeStyles((theme) => ({
         width: '100%',
         maxWidth: '275px',
         backgroundColor: 'transparent',
+    },
+    root: {
+        maxWidth: '100%',
+        '& .MuiCardHeader-title':{
+            fontSize: '18px',
+        },
+        '& .MuiCardHeader-subheader': {
+            fontSize: '16px',
+        },
+        '& .MuiCardContent-root': {
+            paddingBottom: 0,
+        },
+        '& .MuiCardActions-root':{
+            paddingTop: 0,
+        }
+    },
+    media: {
+        height: 0,
+        paddingTop: "56.25%" // 16:9
+    },
+    expand: {
+        transform: "rotate(0deg)",
+        marginLeft: "auto",
+        transition: theme.transitions.create("transform", {
+            duration: theme.transitions.duration.shortest
+        })
+    },
+    expandOpen: {
+        transform: "rotate(180deg)"
+    },
+    avatar: {
+        backgroundColor: 'navy'
     }
 
 }));

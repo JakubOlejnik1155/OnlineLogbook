@@ -17,6 +17,8 @@ import NewActionForm from "./RoutesComponents/NewActionForm";
 import ForecastEntryForm from "./RoutesComponents/ForecastEntryForm";
 import FinishDay from './RoutesComponents/FinishDay';
 import FinishCruise from './RoutesComponents/FinishCruise';
+import Map from './RoutesComponents/Map';
+import Cruises from './RoutesComponents/Cruises';
 
 const useStyles = makeStyles((theme)=>({
     DashboardContent: {
@@ -67,9 +69,9 @@ const Dashboard = () => {
             <Route path="/dashboard/add/forecast" exact> <ForecastEntryForm /> </Route>
             <Route path="/dashboard/finish/cruise" exact> <FinishCruise /> </Route>
             <Route path="/dashboard/finish/day" exact> <FinishDay /></Route>
-            <Route path="/dashboard/cruises" exact> <p style={{ textAlign: 'center' }}>My Cruises</p> </Route>
+            <Route path="/dashboard/cruises" exact> <Cruises /> </Route>
             <Route path="/dashboard/current-trip-days" exact> <p style={{ textAlign: 'center' }}>Days of current Trip</p> </Route>
-            <Route path="/dashboard/map" exact> <p style={{ textAlign: 'center' }}>Map</p> </Route>
+            <Route path="/dashboard/map" exact> <Map /> </Route>
             <Route path="/dashboard/settings" exact> <p style={{ textAlign: 'center' }}>settings</p> </Route>
             <Route path="/dashboard/about" exact> <p style={{ textAlign: 'center' }}>About</p> </Route>
         </Switch>
