@@ -1,21 +1,91 @@
 import React from 'react';
 import clsx from "clsx";
-import { Grid, Card, CardHeader, CardMedia, CardContent, Typography, CardActions, Collapse, IconButton} from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, Typography, CardActions, Collapse, IconButton, CircularProgress} from '@material-ui/core';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ReactCountryFlag from "react-country-flag"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
+import ReactMapGl from "react-map-gl";
 
 
+import AuthApi from '../../../../authAPI';
+import Allert from './Allert';
 import { useStyles } from '../constants/styleObject';
 import {countryList} from '../constants/countres';
+import { unauthorizedLogOut, GetRequestFunction } from '../constants/functions';
+
 
 const OneCruise = ({cruise}) => {
 
     const classes = useStyles();
+    const Auth = React.useContext(AuthApi);
     const [expanded, setExpanded] = React.useState(false);
     const [ISO, setISO] = React.useState("US");
+    const [data, setData] = React.useState();
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [viewport, setViewport] = React.useState({
+        width: '100%',
+        height: '300px',
+        latitude: 32.890983, 
+        longitude: - 16.734528,
+        zoom: 7,
+    })
+    const [allert, setAllert] = React.useState({
+        open: false,
+        variant: 'filled',
+        duration: 4000,
+        type: 'success',
+        title: 'success',
+        msg: 'success msg',
+    });
 
+    //get days
+    React.useEffect(()=>{
+        try{
+            setTimeout(() => {
+                GetRequestFunction(`/api/days/cruise/${cruise._id}`)
+                    .then(response => {
+                        //unauthorized
+                        if (response.error && response.error.code === 401) {
+                            console.log('unauthorized');
+                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                            setTimeout(() => {
+                                Auth.setAuth(false);
+                                unauthorizedLogOut();
+                            }, 3000)
+                        } else {
+                             if (response.error) {
+                                setAllert({ ...allert, duration: 99999, open: true, type: 'error', title: response.error.code, msg: response.error.msg + "Try to reload the page!!!" })
+                            }
+                            else {
+                                setData(response);
+                                let lat = 0;
+                                let lng = 0;
+                                let counter = 0;
+                                response.data.forEach((day)=>{
+                                    day.hourlyArray.forEach((hour)=>{
+                                        lat += hour.latitude;
+                                        lng += hour.longitude;
+                                        counter++;
+                                    })
+                                });
+                                if(lat !== 0 && lng !== 0){
+                                 setViewport({
+                                     ...viewport,
+                                     latitude: lat/counter,
+                                     longitude: lng/counter,
+                                    })
+                                }
+                                setIsLoading(false)
+                            }
+                        }
+                    })
+            }, 1000)
+        }catch(error){console.log(error)}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+    
+    //ISO
     React.useEffect(()=> {
         countryList.forEach(country => {
             if (country.label === cruise.country) {
@@ -59,11 +129,20 @@ const OneCruise = ({cruise}) => {
                         subheader={new Date(cruise.startDate).toLocaleDateString()}
                     />
 
-                    <CardMedia
-                        className={classes.media}
-                        image="https://user-images.githubusercontent.com/24270855/43633272-6633cc20-9711-11e8-94a4-f1e1c55886d5.JPG"
-                        title="cruise map"
-                    />
+                    
+                        <ReactMapGl
+                            {...viewport}
+                            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                            onViewportChange={viewport => setViewport(viewport)}
+                            mapStyle="mapbox://styles/jakubolejnik/cka83m23t24ph1iog6zhdz6bd"
+                        >
+                            {isLoading &&(
+                                <div style={{ width: '100%', height: '100%', backgroundColor: 'gray',display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+                                    <CircularProgress style={{ color: 'rgb(245,2,87)'}}/>
+                                </div>
+                            )}
+                        </ReactMapGl>
+                   
 
                     <CardContent>
                             {cruise.isDone === false && <p style={{ textAlign: 'right', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}>Still ACTIVE </p>}
@@ -123,6 +202,9 @@ const OneCruise = ({cruise}) => {
                     </Collapse>
                 </Card>
             </Grid>
+            <Allert
+                allert={allert}
+                setAllert={setAllert} />
         </>
      );
 }
