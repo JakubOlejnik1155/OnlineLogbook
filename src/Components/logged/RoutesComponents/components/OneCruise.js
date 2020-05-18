@@ -6,14 +6,18 @@ import ReactCountryFlag from "react-country-flag"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 import ReactMapGl from "react-map-gl";
-
+//
+import { saveAs } from 'file-saver';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+//
 
 import AuthApi from '../../../../authAPI';
+import connections from '../../../connections';
 import Allert from './Allert';
 import { useStyles } from '../constants/styleObject';
 import {countryList} from '../constants/countres';
-import { unauthorizedLogOut, GetRequestFunction } from '../constants/functions';
-
+import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from '../constants/functions';
 
 const OneCruise = ({cruise}) => {
 
@@ -104,6 +108,28 @@ const OneCruise = ({cruise}) => {
         const hour = Math.floor(number);
         const minutes = number - hour;
         return hour+ "h "+ Math.round(60*minutes)+ "min"
+    }
+
+    const DownloandDayLogbook = (id) => {
+        console.log('downloand', id);
+        let day ={};
+        data.data.forEach(element => {
+            if (element._id === id ){
+                day = element;
+            }
+        })
+        console.log(day);
+        const token = Cookies.get('RefreshToken');
+        PostRequestFunction("/api/days/pdf", day)
+            .then(() => axios.get(connections.server.concat("/api/days/pdf"), {
+                responseType: 'blob',
+                headers: {
+                    'authorization': `Bearer ${token}`
+                }}))
+            .then(response => {
+                const pdfBlob = new Blob([response.data], {type: 'application/pdf'});
+                saveAs(pdfBlob, `${new Date(day.date).toLocaleDateString()}.pdf`)
+            })
     }
 
     return (
@@ -217,7 +243,7 @@ const OneCruise = ({cruise}) => {
                                                     <>
                                                         <Typography variant="body2" style={{ fontSize: '14px', color: 'green', paddingLeft: '10px', textAlign: 'right' }}>
                                                             download day logook
-                                                        <IconButton aria-label="add to favorites" onClick={() => console.log('downloand', day._id)}>
+                                                        <IconButton aria-label="downloand logbook" onClick={() => DownloandDayLogbook(day._id)}>
                                                                 <GetAppTwoToneIcon style={{ fill: 'green' }} />
                                                             </IconButton>
                                                         </Typography>
