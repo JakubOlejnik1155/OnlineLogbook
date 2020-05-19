@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from "clsx";
-import { Grid, Card, CardHeader, CardContent, Typography, CardActions, Collapse, IconButton, CircularProgress, Divider} from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, Typography, CardActions, Collapse, IconButton, CircularProgress, Divider, withStyles} from '@material-ui/core';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ReactCountryFlag from "react-country-flag"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
@@ -27,6 +27,7 @@ const OneCruise = ({cruise}) => {
     const [ISO, setISO] = React.useState("US");
     const [data, setData] = React.useState();
     const [isLoading, setIsLoading] = React.useState(true);
+    const [isPdfLoading, setIsPdfLoading] = React.useState(false);
     const [viewport, setViewport] = React.useState({
         width: '100%',
         cursor: 'pointer',
@@ -111,7 +112,7 @@ const OneCruise = ({cruise}) => {
     }
 
     const DownloandDayLogbook = (id) => {
-        console.log('downloand', id);
+        setIsPdfLoading(id);
         let day ={};
         data.data.forEach(element => {
             if (element._id === id ){
@@ -128,6 +129,7 @@ const OneCruise = ({cruise}) => {
                 }}))
             .then(response => {
                 const pdfBlob = new Blob([response.data], {type: 'application/pdf'});
+                setIsPdfLoading(false);
                 saveAs(pdfBlob, `${new Date(day.date).toLocaleDateString()}.pdf`)
             })
     }
@@ -244,7 +246,8 @@ const OneCruise = ({cruise}) => {
                                                         <Typography variant="body2" style={{ fontSize: '14px', color: 'green', paddingLeft: '10px', textAlign: 'right' }}>
                                                             download day logook
                                                         <IconButton aria-label="downloand logbook" onClick={() => DownloandDayLogbook(day._id)}>
-                                                                <GetAppTwoToneIcon style={{ fill: 'green' }} />
+                                                                {isPdfLoading !== day._id && <GetAppTwoToneIcon style={{ fill: 'green' }} /> }
+                                                                {isPdfLoading === day._id && <ColorCircularProgress size={24} thickness={4} />} 
                                                             </IconButton>
                                                         </Typography>
                                                     </>
@@ -273,3 +276,11 @@ const OneCruise = ({cruise}) => {
 }
 
 export default OneCruise
+
+const ColorCircularProgress = withStyles({
+    root: {
+        color: 'rgb(68,183,0)',
+        width: '24px',
+        height: '24px',
+    },
+})(CircularProgress);
