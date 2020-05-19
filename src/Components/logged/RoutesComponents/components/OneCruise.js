@@ -175,7 +175,7 @@ const OneCruise = ({cruise}) => {
 
 
                     <CardContent>
-                            {cruise.isDone === false && <p style={{ textAlign: 'right', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}>Still ACTIVE </p>}
+                            {/* {cruise.isDone === false && <p style={{ textAlign: 'right', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}>Still ACTIVE </p>} */}
                         <Typography variant="body2" color="textSecondary" component="p" style={{fontSize: '16px'}}>
                             Cruise started in <span style={{color: 'black', fontStyle: 'italic'}}>{cruise.harbour}</span>.
                             Sailed <span style={{ color: 'black', fontStyle: 'italic' }}>{cruise.nauticalMiles}</span> nautical miles on boat
@@ -184,12 +184,17 @@ const OneCruise = ({cruise}) => {
                     </CardContent>
 
                     <CardActions disableSpacing>
-                        <IconButton aria-label="add to favorites" onClick={()=>console.log('downloand', cruise._id)}>
-                            <GetAppTwoToneIcon  style={{fill: 'green'}}/>
-                        </IconButton>
-                        <Typography variant="body2" style={{ fontSize: '14px', color: 'green' }}>
-                            download cruise logook
-                        </Typography>
+                        {cruise.isDone === false ? <p style={{ paddingLeft: '10px', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}> cruise is still active </p> :(
+                        <>
+                            <IconButton aria-label="add to favorites" onClick={() => console.log(data)}>
+                                <GetAppTwoToneIcon style={{ fill: 'green' }} />
+                            </IconButton>
+                            <Typography variant="body2" style={{ fontSize: '14px', color: 'green' }}>
+                                download cruise logook
+                            </Typography>
+                        </>
+                        )}
+                        
                         <IconButton
                             className={clsx(classes.expand, {
                                 [classes.expandOpen]: expanded
@@ -245,7 +250,7 @@ const OneCruise = ({cruise}) => {
                                                     <>
                                                         <Typography variant="body2" style={{ fontSize: '14px', color: 'green', paddingLeft: '10px', textAlign: 'right' }}>
                                                             download day logook
-                                                        <IconButton aria-label="downloand logbook" onClick={() => DownloandDayLogbook(day._id)}>
+                                                        <IconButton aria-label="downloand logbook" disabled={isPdfLoading === day._id ? true : false} onClick={() => DownloandDayLogbook(day._id)}>
                                                                 {isPdfLoading !== day._id && <GetAppTwoToneIcon style={{ fill: 'green' }} /> }
                                                                 {isPdfLoading === day._id && <ColorCircularProgress size={24} thickness={4} />} 
                                                             </IconButton>
