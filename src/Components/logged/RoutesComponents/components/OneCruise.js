@@ -6,11 +6,10 @@ import ReactCountryFlag from "react-country-flag"
 import DeleteForeverTwoToneIcon from '@material-ui/icons/DeleteForeverTwoTone';
 import GetAppTwoToneIcon from '@material-ui/icons/GetAppTwoTone';
 import ReactMapGl from "react-map-gl";
-//
 import { saveAs } from 'file-saver';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-//
+
 
 import AuthApi from '../../../../authAPI';
 import connections from '../../../connections';
@@ -18,6 +17,7 @@ import Allert from './Allert';
 import { useStyles } from '../constants/styleObject';
 import {countryList} from '../constants/countres';
 import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from '../constants/functions';
+
 
 const OneCruise = ({cruise}) => {
 
@@ -119,20 +119,61 @@ const OneCruise = ({cruise}) => {
                 day = element;
             }
         })
-        console.log(day);
         const token = Cookies.get('RefreshToken');
         PostRequestFunction("/api/days/pdf", day)
-            .then(() => axios.get(connections.server.concat("/api/days/pdf"), {
-                responseType: 'blob',
-                headers: {
-                    'authorization': `Bearer ${token}`
-                }}))
+            .then((response) => {
+                if (response.error && response.error.code === 401) throw Error(401)
+                else return axios.get(connections.server.concat("/api/days/pdf"), {
+                    responseType: 'blob',
+                    headers: {
+                        'authorization': `Bearer ${token}`
+                    }
+                })
+            })
             .then(response => {
                 const pdfBlob = new Blob([response.data], {type: 'application/pdf'});
                 setIsPdfLoading(false);
                 saveAs(pdfBlob, `${new Date(day.date).toLocaleDateString()}.pdf`)
             })
+            .catch(error => {
+                if (error.message === "401") {
+                    console.log('unauthorized');
+                    setAllert({ ...allert, open: true, type: 'error', title: 'Error 401', msg: 'you are not authorized' })
+                    setTimeout(() => {
+                        Auth.setAuth(false);
+                        unauthorizedLogOut();
+                    }, 3000)
+                }
+            })
     }
+
+    const DownloandCruiseLogbook = days => {
+        const token = Cookies.get('RefreshToken');
+        PostRequestFunction("/api/cruises/pdf", days)
+            .then((response) =>{
+                if (response.error && response.error.code === 401) throw Error(401)
+                else return axios.get(connections.server.concat("/api/cruises/pdf"), {
+                    responseType: 'blob',
+                    headers: {
+                        'authorization': `Bearer ${token}`
+                    }
+                })
+            })
+            .then(response => {
+                    const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+                    saveAs(pdfBlob, `${cruise.country}_${cruise.sailingArea}_${new Date(cruise.startDate).getFullYear()}.pdf`)
+            })
+            .catch(error => {
+                if (error.message === "401") {
+                    console.log('unauthorized');
+                    setAllert({ ...allert, open: true, type: 'error', title: 'Error 401', msg: 'you are not authorized' })
+                    setTimeout(() => {
+                        Auth.setAuth(false);
+                        unauthorizedLogOut();
+                    }, 3000)
+                }
+            })
+    };
 
     return (
         <>
@@ -186,7 +227,7 @@ const OneCruise = ({cruise}) => {
                     <CardActions disableSpacing>
                         {cruise.isDone === false ? <p style={{ paddingLeft: '10px', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}> cruise is still active </p> :(
                         <>
-                            <IconButton aria-label="add to favorites" onClick={() => console.log(data)}>
+                            <IconButton aria-label="add to favorites" onClick={() => DownloandCruiseLogbook(data)}>
                                 <GetAppTwoToneIcon style={{ fill: 'green' }} />
                             </IconButton>
                             <Typography variant="body2" style={{ fontSize: '14px', color: 'green' }}>
@@ -194,7 +235,6 @@ const OneCruise = ({cruise}) => {
                             </Typography>
                         </>
                         )}
-                        
                         <IconButton
                             className={clsx(classes.expand, {
                                 [classes.expandOpen]: expanded
