@@ -224,7 +224,7 @@ const OneCruise = ({cruise}) => {
                             {/* {cruise.isDone === false && <p style={{ textAlign: 'right', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}>Still ACTIVE </p>} */}
                         <Typography variant="body2" color="textSecondary" component="p" style={{fontSize: '16px'}}>
                             Cruise started in <span style={{color: 'black', fontStyle: 'italic'}}>{cruise.harbour}</span>.
-                            Sailed <span style={{ color: 'black', fontStyle: 'italic' }}>{cruise.nauticalMiles}</span> nautical miles on boat
+                            Sailed <span style={{ color: 'black', fontStyle: 'italic' }}>{Math.round(cruise.nauticalMiles*100)/100}</span> nautical miles on boat
                              <span style={{ color: 'black', fontStyle: 'italic' }}>{" "+cruise.boatID[0].name}</span>.
                         </Typography>
                     </CardContent>
@@ -263,7 +263,7 @@ const OneCruise = ({cruise}) => {
                             >
                                 <Grid item xs={12} sm={6}>
                                     <Typography paragraph color="secondary">Stats:</Typography>
-                                    <p><span style={{ color: 'rgb(35,123,232)' }}>Nautical miles sailed:</span><span style={{ float: 'right' }}>{cruise.nauticalMiles} nm</span> </p>
+                                    <p><span style={{ color: 'rgb(35,123,232)' }}>Nautical miles sailed:</span><span style={{ float: 'right' }}>{Math.round(cruise.nauticalMiles*100)/100} nm</span> </p>
                                     <p><span style={{ color: 'rgb(35,123,232)'}}>Hours at sea:</span><span style={{float: 'right'}}>{floatToHoursPlusMinutes(cruise.travelHours)}</span> </p>
                                     <p><span style={{ color: 'rgb(35,123,232)' }}>Sailed on sails:</span> <span style={{ float: 'right' }}>{floatToHoursPlusMinutes(cruise.hoursSailedOnSails)}</span> </p>
                                     <p><span style={{ color: 'rgb(35,123,232)' }}>Sailed on engine:</span> <span style={{ float: 'right' }}>{floatToHoursPlusMinutes(cruise.hoursSailedOnEngine)}</span> </p>
@@ -283,12 +283,12 @@ const OneCruise = ({cruise}) => {
                                         {data && data.data.map(day=>(
 
                                             <div key={day._id}>
-                                                <p style={{color: 'gray', fontStyle: 'italic'}}>{new Date(day.date).toLocaleDateString()}</p>
+                                                <p style={{ color: 'gray', fontStyle: 'italic' }}>{new Date(day.date).toLocaleDateString()}<span style={{ float: 'right' }}> <DeleteForeverTwoToneIcon style={{ fill: 'orangered', cursor: 'pointer' }} /> </span></p>
                                                 <p style={{paddingLeft: '10px'}}> <span style={{ fontSize: '12px',color: 'gray', fontStyle: 'italic' }}>from</span> {day.startHarbor} <span style={{ fontSize: '12px',color: 'gray', fontStyle: 'italic' }}>  to</span> {day.endHarbor}</p>
 
 
                                                 <p style={{paddingLeft: '10px'}}><span style={{ color: 'rgb(35,123,232)' }}>Hours at sea:</span><span style={{ float: 'right' }}> {floatToHoursPlusMinutes(day.travelHours)}</span> </p>
-                                                <p style={{paddingLeft: '10px'}}><span style={{ color: 'rgb(35,123,232)' }}>Nautical miles:</span> <span style={{ float: 'right' }}>{day.nauticalMiles} nm</span> </p>
+                                                <p style={{ paddingLeft: '10px' }}><span style={{ color: 'rgb(35,123,232)' }}>Nautical miles:</span> <span style={{ float: 'right' }}>{Math.round(day.nauticalMiles *100)/100} nm</span> </p>
                                                 <p style={{paddingLeft: '10px'}}><span style={{ color: 'rgb(35,123,232)' }}>On sails:</span> <span style={{ float: 'right' }}>{floatToHoursPlusMinutes(day.hoursSailedOnSails)}</span> </p>
                                                 <p style={{paddingLeft: '10px'}}><span style={{ color: 'rgb(35,123,232)' }}>On engine:</span> <span style={{ float: 'right' }}>{floatToHoursPlusMinutes(day.hoursSailedOnEngine)}</span> </p>
 
@@ -298,7 +298,7 @@ const OneCruise = ({cruise}) => {
                                                             download day logook
                                                         <IconButton aria-label="downloand logbook" disabled={isPdfLoading === day._id ? true : false} onClick={() => DownloandDayLogbook(day._id)}>
                                                                 {isPdfLoading !== day._id && <GetAppTwoToneIcon style={{ fill: 'green' }} /> }
-                                                                {isPdfLoading === day._id && <ColorCircularProgress size={24} thickness={4} />} 
+                                                                {isPdfLoading === day._id && <ColorCircularProgress size={24} thickness={4} />}
                                                             </IconButton>
                                                         </Typography>
                                                     </>
