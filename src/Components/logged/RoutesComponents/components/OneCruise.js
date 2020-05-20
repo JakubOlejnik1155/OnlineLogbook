@@ -28,6 +28,7 @@ const OneCruise = ({cruise}) => {
     const [data, setData] = React.useState();
     const [isLoading, setIsLoading] = React.useState(true);
     const [isPdfLoading, setIsPdfLoading] = React.useState(false);
+    const [isCruiseLogbookLoading, setIsCruiseLogbookLoading] = React.useState(false)
     const [viewport, setViewport] = React.useState({
         width: '100%',
         cursor: 'pointer',
@@ -136,6 +137,7 @@ const OneCruise = ({cruise}) => {
                 saveAs(pdfBlob, `${new Date(day.date).toLocaleDateString()}.pdf`)
             })
             .catch(error => {
+                setIsPdfLoading(false);
                 if (error.message === "401") {
                     console.log('unauthorized');
                     setAllert({ ...allert, open: true, type: 'error', title: 'Error 401', msg: 'you are not authorized' })
@@ -148,6 +150,7 @@ const OneCruise = ({cruise}) => {
     }
 
     const DownloandCruiseLogbook = days => {
+        setIsCruiseLogbookLoading(true)
         const token = Cookies.get('RefreshToken');
         PostRequestFunction("/api/cruises/pdf", days)
             .then((response) =>{
@@ -161,9 +164,11 @@ const OneCruise = ({cruise}) => {
             })
             .then(response => {
                     const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+                    setIsCruiseLogbookLoading(false)
                     saveAs(pdfBlob, `${cruise.country}_${cruise.sailingArea}_${new Date(cruise.startDate).getFullYear()}.pdf`)
             })
             .catch(error => {
+                setIsCruiseLogbookLoading(false)
                 if (error.message === "401") {
                     console.log('unauthorized');
                     setAllert({ ...allert, open: true, type: 'error', title: 'Error 401', msg: 'you are not authorized' })
@@ -228,7 +233,8 @@ const OneCruise = ({cruise}) => {
                         {cruise.isDone === false ? <p style={{ paddingLeft: '10px', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}> cruise is still active </p> :(
                         <>
                             <IconButton aria-label="add to favorites" onClick={() => DownloandCruiseLogbook(data)}>
-                                <GetAppTwoToneIcon style={{ fill: 'green' }} />
+                                    {!isCruiseLogbookLoading && <GetAppTwoToneIcon style={{ fill: 'green' }} />}
+                                    {isCruiseLogbookLoading  && <ColorCircularProgress size={24} thickness={4} />} 
                             </IconButton>
                             <Typography variant="body2" style={{ fontSize: '14px', color: 'green' }}>
                                 download cruise logook
