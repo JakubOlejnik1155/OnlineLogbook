@@ -17,6 +17,7 @@ import Allert from './Allert';
 import { useStyles } from '../constants/styleObject';
 import {countryList} from '../constants/countres';
 import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from '../constants/functions';
+import BeforeCancelComponent from './BeforeCancelComponent';
 
 
 const OneCruise = ({cruise}) => {
@@ -45,7 +46,7 @@ const OneCruise = ({cruise}) => {
         title: 'success',
         msg: 'success msg',
     });
-
+    const [dialogOpen, setDialogOpen] = React.useState(false)
     //get days
     React.useEffect(()=>{
         try{
@@ -221,7 +222,6 @@ const OneCruise = ({cruise}) => {
 
 
                     <CardContent>
-                            {/* {cruise.isDone === false && <p style={{ textAlign: 'right', color: 'green', fontStyle: 'italic', fontWeight: 'bold' }}>Still ACTIVE </p>} */}
                         <Typography variant="body2" color="textSecondary" component="p" style={{fontSize: '16px'}}>
                             Cruise started in <span style={{color: 'black', fontStyle: 'italic'}}>{cruise.harbour}</span>.
                             Sailed <span style={{ color: 'black', fontStyle: 'italic' }}>{Math.round(cruise.nauticalMiles*100)/100}</span> nautical miles on boat
@@ -234,7 +234,7 @@ const OneCruise = ({cruise}) => {
                         <>
                             <IconButton aria-label="add to favorites" onClick={() => DownloandCruiseLogbook(data)}>
                                     {!isCruiseLogbookLoading && <GetAppTwoToneIcon style={{ fill: 'green' }} />}
-                                    {isCruiseLogbookLoading  && <ColorCircularProgress size={24} thickness={4} />} 
+                                    {isCruiseLogbookLoading  && <ColorCircularProgress size={24} thickness={4} />}
                             </IconButton>
                             <Typography variant="body2" style={{ fontSize: '14px', color: 'green' }}>
                                 download cruise logook
@@ -283,8 +283,8 @@ const OneCruise = ({cruise}) => {
                                         {data && data.data.map(day=>(
 
                                             <div key={day._id}>
-                                                <p style={{ color: 'gray', fontStyle: 'italic' }}>{new Date(day.date).toLocaleDateString()}<span style={{ float: 'right' }}> <DeleteForeverTwoToneIcon style={{ fill: 'orangered', cursor: 'pointer' }} /> </span></p>
-                                                <p style={{paddingLeft: '10px'}}> <span style={{ fontSize: '12px',color: 'gray', fontStyle: 'italic' }}>from</span> {day.startHarbor} <span style={{ fontSize: '12px',color: 'gray', fontStyle: 'italic' }}>  to</span> {day.endHarbor}</p>
+                                                <p style={{ color: 'gray', fontStyle: 'italic' }}>{new Date(day.date).toLocaleDateString()}<span style={{ float: 'right' }}> <DeleteForeverTwoToneIcon style={{ fill: 'orangered', cursor: 'pointer' }} onClick={()=>setDialogOpen(day._id)}/> </span></p>
+                                                <p style={{ paddingLeft: '10px' }}> <span style={{ fontSize: '12px', color: 'gray', fontStyle: 'italic' }}>from</span> {day.startHarbor} <span style={{ fontSize: '12px', color: 'gray', fontStyle: 'italic' }}>  to</span> {day.endHarbor ? day.endHarbor : " ___"}</p>
 
 
                                                 <p style={{paddingLeft: '10px'}}><span style={{ color: 'rgb(35,123,232)' }}>Hours at sea:</span><span style={{ float: 'right' }}> {floatToHoursPlusMinutes(day.travelHours)}</span> </p>
@@ -308,6 +308,13 @@ const OneCruise = ({cruise}) => {
                                                     </Typography>
                                                 )}
                                                 <Divider style={{ margin: '0px 0 10px 0' }} />
+                                                <BeforeCancelComponent
+                                                    daysArray={data}
+                                                    setData={setData}
+                                                    day={day}
+                                                    dialogOpen={dialogOpen}
+                                                    setDialogOpen={setDialogOpen}
+                                                />
                                             </div>
 
 
