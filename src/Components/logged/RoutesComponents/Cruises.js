@@ -83,7 +83,7 @@ const Cruises = () => {
                         justify="center"
                         alignItems="center"
                     >
-                        {(isFormAvaliable === true && data.data) && data.data.map((cruise) => <OneCruise key={cruise.startDate} cruise={cruise}>{cruise.country}</OneCruise>)}
+                        {(isFormAvaliable === true && data.data) && data.data.map((cruise) => <OneCruise key={cruise.startDate} cruise={cruise} cruisesArray={data} setCruisesArray={setData}>{cruise.country}</OneCruise>)}
                     </Grid>
                     <LoadingComponent isLoadeing={isLoading} />
                 </Grid>

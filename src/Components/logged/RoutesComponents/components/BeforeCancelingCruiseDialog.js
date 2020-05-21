@@ -17,7 +17,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const BeforeCancelComponent = ({ day, dialogOpen, setDialogOpen, daysArray, setData}) => {
+const BeforeCancelingCruiseDialog = ({ cruise, dialogOpen, setCruiseDialogOpen, setCruisesArray, cruisesArray }) => {
     const Auth = React.useContext(AuthApi);
     const [loading, setLoading] = React.useState(false);
     const [allert, setAllert] = React.useState({
@@ -29,12 +29,12 @@ const BeforeCancelComponent = ({ day, dialogOpen, setDialogOpen, daysArray, setD
         msg: 'success msg',
     });
     const handleClose = () => {
-        setDialogOpen(false)
+        setCruiseDialogOpen(false)
     };
-    const deleteDay = (day) => {
-        setLoading(true)
-        const newDays = daysArray.data.filter((element)=> element._id !== day._id);
-        DeleteRequestFunction(`/api/days/${day._id}`)
+    const deleteCruise = (cruise) => {
+        setLoading(true);
+        const newCruisesArray = cruisesArray.data.filter((element) => element._id !== cruise._id);
+        DeleteRequestFunction(`/api/cruises/${cruise._id}`)
             .then(response => {
                 if (response.error && response.error.code === 401) {
                     setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
@@ -47,9 +47,9 @@ const BeforeCancelComponent = ({ day, dialogOpen, setDialogOpen, daysArray, setD
                         return setAllert({ ...allert, open: true, type: 'warning', title: response.error.code, msg: response.error.msg })
                     }
                     else if (response.success) {
-                        setData({ data: newDays });
+                        setCruisesArray({ data: newCruisesArray });
                         setLoading(false)
-                        setDialogOpen(false);
+                        setCruiseDialogOpen(false);
                     }
                     else {
                         setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
@@ -62,26 +62,28 @@ const BeforeCancelComponent = ({ day, dialogOpen, setDialogOpen, daysArray, setD
     return (
         <>
             <Dialog
-                open={dialogOpen === day._id ? true : false}
+                open={dialogOpen === cruise._id ? true : false}
                 onClose={handleClose}
                 TransitionComponent={Transition}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title"> <span style={{ color: 'orangered' }}>WARNING! </span> Are you sure you want to delete this day?</DialogTitle>
+                <DialogTitle id="alert-dialog-title"> <span style={{ color: 'orangered' }}>WARNING! </span> Are you sure you want to delete this cruise?</DialogTitle>
                 <DialogContent style={loading ? { textAlign: 'center' } : {}}>
-                       {loading ? <ColorCircularProgress size={24} thickness={4} /> : (
+                    {loading ? <ColorCircularProgress size={24} thickness={4} /> : (
                             <>
-                                <span>{new Date(day.date).toLocaleDateString()}</span><br />
-                                <span style={{ fontSize: '12px', color: 'gray', fontStyle: 'italic' }}>from</span> {day.startHarbor} <span style={{ fontSize: '12px', color: 'gray', fontStyle: 'italic' }}>  to</span> {day.endHarbor}
+                                <span>{new Date(cruise.startDate).toLocaleDateString()}</span><br />
+                                <span style={{  color: 'black', fontStyle: 'italic' }}>{cruise.country}</span>,
+                                <span style={{  color: 'gray', fontStyle: 'italic' }}>{" "+cruise.sailingArea}</span>
+
                             </>
-                        )}
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary" disabled={loading}>
-                        <span style={{ color: 'rgb(46,128,233)'}}>No</span>
+                        <span style={{ color: 'rgb(46,128,233)' }}>No</span>
                     </Button>
-                    <Button onClick={ ()=>deleteDay(day)} color="primary" autoFocus disabled={loading}>
+                    <Button onClick={() => deleteCruise(cruise)} color="primary" autoFocus disabled={loading}>
                         <span style={{ color: 'orangered' }}>Yes</span>
                     </Button>
                 </DialogActions>
@@ -90,10 +92,10 @@ const BeforeCancelComponent = ({ day, dialogOpen, setDialogOpen, daysArray, setD
                 allert={allert}
                 setAllert={setAllert} />
         </>
-     );
+    );
 }
 
-export default BeforeCancelComponent;
+export default BeforeCancelingCruiseDialog;
 
 const ColorCircularProgress = withStyles({
     root: {

@@ -18,9 +18,9 @@ import { useStyles } from '../constants/styleObject';
 import {countryList} from '../constants/countres';
 import { unauthorizedLogOut, GetRequestFunction, PostRequestFunction } from '../constants/functions';
 import BeforeCancelComponent from './BeforeCancelComponent';
+import BeforeCancelingCruiseDialog from './BeforeCancelingCruiseDialog';
 
-
-const OneCruise = ({cruise}) => {
+const OneCruise = ({ cruise, cruisesArray, setCruisesArray}) => {
 
     const classes = useStyles();
     const Auth = React.useContext(AuthApi);
@@ -47,6 +47,7 @@ const OneCruise = ({cruise}) => {
         msg: 'success msg',
     });
     const [dialogOpen, setDialogOpen] = React.useState(false)
+    const [CruiseDialogOpen, setCruiseDialogOpen] = React.useState(false)
     //get days
     React.useEffect(()=>{
         try{
@@ -197,8 +198,8 @@ const OneCruise = ({cruise}) => {
                             />
                         }
                         action={
-                            <IconButton aria-label="settings" onClick={() => console.log(cruise)}>
-                                <DeleteForeverTwoToneIcon style={{fill: 'orangered'}}/>
+                            <IconButton aria-label="settings" onClick={() => setCruiseDialogOpen(cruise._id)}>
+                                <DeleteForeverTwoToneIcon style={{ fill: 'orangered' }} />
                             </IconButton>
                         }
                         title={cruise.country + ", " + cruise.sailingArea}
@@ -326,6 +327,13 @@ const OneCruise = ({cruise}) => {
                     </Collapse>
                 </Card>
             </Grid>
+            <BeforeCancelingCruiseDialog
+                cruise={cruise}
+                dialogOpen={CruiseDialogOpen}
+                setCruiseDialogOpen={setCruiseDialogOpen}
+                cruisesArray={cruisesArray}
+                setCruisesArray={setCruisesArray}
+                />
             <Allert
                 allert={allert}
                 setAllert={setAllert} />
