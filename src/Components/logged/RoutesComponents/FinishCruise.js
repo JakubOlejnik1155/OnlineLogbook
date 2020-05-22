@@ -97,7 +97,6 @@ const FinishCruise = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        console.log("end cruise");
         try {
             setIsLoading(true);
             PatchRequestFunction('/api/cruises/finish')
