@@ -31,7 +31,8 @@ const Map = () => {
         const options = {
             method: 'GET',
         };
-        console.log(prevData);
+        //delete if not required
+        if(prevData){}
         GetFromMatinasAPI(`https://api.marinas.com/v1/points/search?access_token=${process.env.REACT_APP_MARINAS_TOKEN}&location[lat]=${viewport.latitude}&location[lon]=${viewport.longitude}`, options)
         .then(response => {
             setData(response.data);
@@ -78,7 +79,7 @@ const Map = () => {
                                     key={point.id}
                                     latitude={point.location.lat}
                                     longitude={point.location.lon}
-                                    // anchor='bottom'
+                                    className={classes.marker}
                                 >
                                     <img
                                         src={point.icon_urls.light}

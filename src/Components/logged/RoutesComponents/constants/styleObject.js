@@ -89,10 +89,15 @@ export const useStyles = makeStyles((theme) => ({
     },
     popup:{
         '& .mapboxgl-popup-tip':{
-            transform: 'translateX(12px)'
+            // transform: 'translateX(12px)'
         },
         '& .mapboxgl-popup-close-button':{
             padding: '0px 5px 0px 0px',
+        }
+    },
+    marker:{
+        '& img':{
+            transform: 'translate(-12px, -12px)',
         }
     }
 }));
