@@ -86,8 +86,15 @@ export const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         backgroundColor: 'navy'
+    },
+    popup:{
+        '& .mapboxgl-popup-tip':{
+            transform: 'translateX(12px)'
+        },
+        '& .mapboxgl-popup-close-button':{
+            padding: '0px 5px 0px 0px',
+        }
     }
-
 }));
 
 
