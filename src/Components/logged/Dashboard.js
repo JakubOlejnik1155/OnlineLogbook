@@ -70,7 +70,7 @@ const Dashboard = () => {
             <Route path="/dashboard/finish/cruise" exact> <FinishCruise /> </Route>
             <Route path="/dashboard/finish/day" exact> <FinishDay /></Route>
             <Route path="/dashboard/cruises" exact> <Cruises /> </Route>
-            <Route path="/dashboard/current-trip-days" exact> <p style={{ textAlign: 'center' }}>Days of current Trip</p> </Route>
+            {/* <Route path="/dashboard/current-trip-days" exact> <p style={{ textAlign: 'center' }}>Days of current Trip</p> </Route> */}
             <Route path="/dashboard/map" exact> <Map /> </Route>
             <Route path="/dashboard/settings" exact> <p style={{ textAlign: 'center' }}>settings</p> </Route>
             <Route path="/dashboard/about" exact> <p style={{ textAlign: 'center' }}>About</p> </Route>

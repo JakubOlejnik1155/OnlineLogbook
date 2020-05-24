@@ -11,7 +11,7 @@ import AddCommentTwoToneIcon from '@material-ui/icons/AddCommentTwoTone';
 import SettingsTwoToneIcon from '@material-ui/icons/SettingsTwoTone';
 import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import MapTwoToneIcon from '@material-ui/icons/MapTwoTone';
-import DateRangeTwoToneIcon from '@material-ui/icons/DateRangeTwoTone';
+// import DateRangeTwoToneIcon from '@material-ui/icons/DateRangeTwoTone';
 import TrendingUpTwoToneIcon from '@material-ui/icons/TrendingUpTwoTone';
 import CancelScheduleSendTwoToneIcon from '@material-ui/icons/CancelScheduleSendTwoTone';
 import RoomTwoToneIcon from '@material-ui/icons/RoomTwoTone';
@@ -102,7 +102,7 @@ export default function Menu(props) {
             <Divider />
             <List className={classes.beforeLastSection+" "+classes.stats}>
                 <MenuLink link="/dashboard/cruises" text="My cruises"><TrendingUpTwoToneIcon className={classes.statsIcon} /> </MenuLink>
-                <MenuLink link="/dashboard/current-trip-days" text="Days of the current trip"><DateRangeTwoToneIcon className={classes.statsIcon} /></MenuLink>
+                {/* <MenuLink link="/dashboard/current-trip-days" text="Days of the current trip"><DateRangeTwoToneIcon className={classes.statsIcon} /></MenuLink> */}
                 <MenuLink link="/dashboard/map" text="Map"><MapTwoToneIcon className={classes.statsIcon} /></MenuLink>
             </List>
             <Divider/>
