@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMapGl, {Marker, Popup} from "react-map-gl";
 import { useState } from 'react';
-import {Grid, Paper, Button} from '@material-ui/core';
+import {Grid, Paper, Button, Typography} from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 
@@ -10,6 +10,7 @@ import { convertDMS } from './constants/functions';
 // import BoatGpsIcon from '../../../images/gps/sailing-boat.svg';
 import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
 import centerIcon from '../../../images/gps/center-gps.svg';
+
 
 const Map = () => {
 
@@ -29,13 +30,10 @@ const Map = () => {
     const [yachtPosition, setYachtPosition] = React.useState(null)
 
     React.useEffect(()=>{
-        console.log('start getting position');
         navigator.geolocation.getCurrentPosition((position) => {
             setAccuracy(position.coords.accuracy);
-            console.log(position);
             setYachtPosition([position.coords.latitude, position.coords.longitude]);
             setViewport({...viewport, latitude: position.coords.latitude, longitude: position.coords.longitude })
-            console.log('END getting position');
         })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -94,6 +92,7 @@ const Map = () => {
                             >
 
                                 {yachtPosition && (
+                                    <>
                                     <div style={{
                                         width: '35px',
                                         height: '35px',
@@ -115,13 +114,10 @@ const Map = () => {
                                         }}
                                             src={centerIcon} alt="centerIcon" width="25" height="25" />
                                     </div>
+                                    <Typography variant="overline" color="secondary" >accuracy: {accuracy/1000}km</Typography>
+                                    </>
                                 )}
-                               
-
-
-
-
-
+                                
                                 {data && viewport.zoom >= 6 && data.map(point => (
                                     <Marker
                                         key={point.id}
