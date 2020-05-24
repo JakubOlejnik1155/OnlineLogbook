@@ -97,7 +97,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     marker:{
         '& img':{
-            transform: 'translate(-12px, -12px)',
+            transform: 'translate(-12px, -24px)',
         }
     }
 }));
