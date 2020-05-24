@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactMapGl, {Marker, Popup} from "react-map-gl";
 import { useState } from 'react';
-import {Grid, Paper, Button, Typography} from '@material-ui/core';
+import {Grid, Paper, Button, Typography, CircularProgress, withStyles} from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 
@@ -16,12 +16,13 @@ const Map = () => {
 
     const classes = useStyles();
     const [data, setData] = React.useState([]);
+    const [loadingPosition, setLoadingPosition] = React.useState(true);
     const [viewport, setViewport] = useState({
         width: '100%',
         height: 'calc(100vh - 150px)',
         borderRadius: '5px',
-        latitude: 41.040683,
-        longitude: 9.537739,
+        latitude: 50.268561,
+        longitude: -4.170343,
         zoom: 9,
     })
     const prevData = usePrevious(viewport);
@@ -31,10 +32,14 @@ const Map = () => {
 
     React.useEffect(()=>{
         navigator.geolocation.getCurrentPosition((position) => {
-            setAccuracy(position.coords.accuracy);
-            setYachtPosition([position.coords.latitude, position.coords.longitude]);
-            setViewport({...viewport, latitude: position.coords.latitude, longitude: position.coords.longitude })
-        })
+                setAccuracy(position.coords.accuracy);
+                setYachtPosition([position.coords.latitude, position.coords.longitude]);
+                setViewport({ ...viewport, latitude: position.coords.latitude, longitude: position.coords.longitude })
+                setLoadingPosition(false);
+            }, ()=> {
+            setViewport(viewport);
+            setLoadingPosition(false);
+            })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
@@ -77,7 +82,7 @@ const Map = () => {
                 justify="center"
                 alignItems="center"
             >
-                <Grid item xs={12} md={8} >
+                <Grid item xs={12} lg={8}>
                     <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
 
                         <ReactMapGl
@@ -114,12 +119,14 @@ const Map = () => {
                                         }}
                                             src={centerIcon} alt="centerIcon" width="25" height="25" />
                                     </div>
-                                    <Typography variant="overline" color="secondary" >accuracy: {accuracy/1000}km</Typography>
+                                    <span style={{padding: 5, backgroundColor: 'rgba(0, 0, 0, .75)', borderRadius: '6px', color: 'snow'}}>
+                                        <Typography style={{margin: 0, padding: 0}} variant="overline">accuracy: {accuracy/1000}km</Typography>
+                                    </span>
                                     </>
                                 )}
-                                
-                                {data && viewport.zoom >= 6 && data.map(point => (
-                                    <Marker
+
+                                {data && viewport.zoom >= 9 && data.map(point => (
+                                   <Marker
                                         key={point.id}
                                         latitude={point.location.lat}
                                         longitude={point.location.lon}
@@ -164,12 +171,19 @@ const Map = () => {
                                     </Popup>
                                 )}
 
-                                {viewport.zoom < 6 && (
+                                {loadingPosition && (
+                                    <div style={{cursor: 'default',position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,zIndex:999, display:'flex', alignItems: 'center',flexDirection:'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow'}}>
+                                        <ColorCircularProgress /><br/>
+                                        <h5>Loading position...</h5>
+                                    </div>
+                                )}
+
+                                {viewport.zoom < 9 && (
                                     <Alert
                                     severity="info"
-                                    style={{ position: 'absolute', top: 5, left: 5, marginRight: 5}}
+                                    style={{ position: 'absolute', bottom: 5, left: 5, marginRight: 5, zIndex: 999}}
                                     >
-                                        Zoom in to show mainas and harbors on map!!!
+                                    Zoom in to show mainas and harbors on map!!! <span role="img" aria-label="anchor">⚓️</span>
                                     </Alert>
                                 )}
                         </ReactMapGl>
@@ -195,3 +209,8 @@ const GetFromMatinasAPI = async (url, options) => {
     const response = await fetch(url, options);
     return response.json()
 }
+const ColorCircularProgress = withStyles({
+    root: {
+        color: 'snow',
+    },
+})(CircularProgress);
