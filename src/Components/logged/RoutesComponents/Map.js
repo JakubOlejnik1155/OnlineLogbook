@@ -12,14 +12,14 @@ import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
 import centerIcon from '../../../images/gps/center-gps.svg';
 
 
-const Map = () => {
+const Map = ({height, width}) => {
 
     const classes = useStyles();
     const [data, setData] = React.useState([]);
     const [loadingPosition, setLoadingPosition] = React.useState(true);
     const [viewport, setViewport] = useState({
-        width: '100%',
-        height: 'calc(100vh - 150px)',
+        width: width,
+        height: height,
         borderRadius: '5px',
         latitude: 50.268561,
         longitude: -4.170343,
