@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import {Typography} from '@material-ui/core';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import DashboardTwoToneIcon from '@material-ui/icons/DashboardTwoTone';
@@ -109,6 +110,10 @@ export default function Menu(props) {
             <List>
                 <MenuLink link="/dashboard/settings" text="Account settings"> <SettingsTwoToneIcon /> </MenuLink>
                 <MenuLink link="/dashboard/about" text="About Online Logbook"> <InfoTwoToneIcon /> </MenuLink>
+            </List>
+            <Divider/>
+            <List style={{textAlign: 'center', color: 'gray', fontStyle: 'italic'}}>
+                <Typography variant="caption" display="block"> version {process.env.REACT_APP_VERSION}</Typography>
             </List>
         </div>
     );

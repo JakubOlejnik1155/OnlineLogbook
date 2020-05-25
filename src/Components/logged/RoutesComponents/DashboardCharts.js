@@ -4,6 +4,8 @@ import ReactMapGl, { Marker } from "react-map-gl";
 import { useState, useEffect } from 'react';
 import { Grid, Paper, CircularProgress, withStyles } from '@material-ui/core';
 import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
+import { convertDMS } from './constants/functions';
+
 
 const useStyles = makeStyles((theme) => ({
     GridContainer: {
@@ -23,11 +25,10 @@ const useStyles = makeStyles((theme) => ({
 
 const DashboardCharts = () => {
     const classes = useStyles();
-    const [accuracy, setAccuracy] = useState(null);
     const [positionPermision, setPositionPermision] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [yachtPosition, setYachtPosition] = useState(null);
-
+    const [goalocationObject, setGeolocationObject] = useState();
     const [viewport, setViewport] = useState({
         width: '100%',
         height: '300px',
@@ -39,7 +40,7 @@ const DashboardCharts = () => {
 
     useEffect(()=>{
         navigator.geolocation.getCurrentPosition((position) => {
-            setAccuracy(position.coords.accuracy);
+            setGeolocationObject(position)
             setYachtPosition([position.coords.latitude, position.coords.longitude]);
             // setYachtPosition([51.84, -27.95]);
             setViewport({ ...viewport, latitude: position.coords.latitude, longitude: position.coords.longitude })
@@ -59,7 +60,20 @@ const DashboardCharts = () => {
             justify="flex-start"
             alignItems="flex-start">
             <Grid item xs={12} md={4}>
-                <Paper className={classes.paper}> stats </Paper>
+                <Paper className={classes.paper}>
+                    <p style={{fontSize: '18px'}}>
+                        <span role='img' aria-label="compasIcon">🧭</span>Position: {yachtPosition ? convertDMS(yachtPosition[0], yachtPosition[1]) : " - "}
+                    </p>
+                    <p style={{fontSize: '18px'}}>
+                        <span role='img' aria-label="accuracyIcon">🌊</span>Altitude: {yachtPosition ? Math.round(goalocationObject.coords.altitude) + "m a.s.l" : "- m a.s.l"}
+                    </p>
+                    <p style={{fontSize: '18px'}}>
+                        <span role='img' aria-label="headingIcon">⛵️</span>Headind: {yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
+                    </p>
+                    <p style={{fontSize: '18px'}}>
+                        <span role='img' aria-label="accuracyIcon">🌏</span>Accuracy: {yachtPosition ? goalocationObject.coords.accuracy + "m" : " - "}
+                    </p>
+                </Paper>
             </Grid>
             <Grid item xs={12} md={4}>
                 <Paper className={classes.paper}> current cruise </Paper>
@@ -85,7 +99,7 @@ const DashboardCharts = () => {
                             style={{ width: '100%', height: '187px', marginTop: '10px' }}
                             title="forecast"
                             src={`https://embed.windy.com/embed2.html?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&zoom=3&level=surface&overlay=wind&menu=&message=&marker=&calendar=&pressure=&type=forecast&location=coordinates&detail=true&detailLat=${yachtPosition[0]}&detailLon=${yachtPosition[1]}&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`}
-                            frameborder="0">
+                            frameBorder="0">
                         </iframe>
                     )}
                     {isLoading && (
