@@ -68,7 +68,7 @@ const DashboardCharts = () => {
                         <span role='img' aria-label="accuracyIcon">🌊</span>Altitude: {yachtPosition ? Math.round(goalocationObject.coords.altitude) + "m a.s.l" : "- m a.s.l"}
                     </p>
                     <p style={{fontSize: '18px'}}>
-                        <span role='img' aria-label="headingIcon">⛵️</span>Headind: {yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
+                        <span role='img' aria-label="headingIcon">⛵️</span>Heading: {yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
                     </p>
                     <p style={{fontSize: '18px'}}>
                         <span role='img' aria-label="accuracyIcon">🌏</span>Accuracy: {yachtPosition ? goalocationObject.coords.accuracy + "m" : " - "}
