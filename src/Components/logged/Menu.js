@@ -22,6 +22,7 @@ import WbSunnyTwoToneIcon from '@material-ui/icons/WbSunnyTwoTone';
 
 const useStyles = makeStyles(theme => ({
     list: {
+        overflowX: 'hidden',
         width: 260,
         height: '100%',
         display: 'flex',
@@ -108,12 +109,10 @@ export default function Menu(props) {
             <Divider/>
             <List>
                 <MenuLink link="/dashboard/settings" text="Account settings"> <SettingsTwoToneIcon /> </MenuLink>
-                <MenuLink link="/dashboard/about" text="About Online Logbook"> <InfoTwoToneIcon /> </MenuLink>
+                <MenuLink link="/dashboard/about" text="About logbook"> <InfoTwoToneIcon /> </MenuLink>
             </List>
             <Divider/>
-            {/* <List style={{textAlign: 'left', color: 'gray'}}> */}
-            <p style={{ textAlign: 'center', color: 'gray', fontSize: '13px', fontStyle: 'italic'}}> version {process.env.REACT_APP_VERSION}</p>
-            {/* </List> */}
+            <span style={{ textAlign: 'center', color: 'gray', fontSize: '13px', fontStyle: 'italic', paddingBottom: '3px', paddingTop: '3px'}}> version {process.env.REACT_APP_VERSION}</span>
         </div>
     );
 

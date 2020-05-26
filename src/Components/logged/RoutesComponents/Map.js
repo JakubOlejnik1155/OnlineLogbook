@@ -108,7 +108,7 @@ const Map = ({height, width}) => {
                                         border: '.5px solid black',
                                         backgroundColor: 'rgba(46,128,233, .8)',
                                         cursor: 'pointer',
-                                    }} onClick={() => { setViewport({ ...viewport, latitude: yachtPosition[0], longitude: yachtPosition[1] }) }}>
+                                    }} onClick={() => { setViewport({ ...viewport, zoom: 9,latitude: yachtPosition[0], longitude: yachtPosition[1] }) }}>
                                         <img style={{
                                             position: 'absolute',
                                             margin: 'auto',
