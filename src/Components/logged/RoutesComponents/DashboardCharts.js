@@ -2,9 +2,10 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMapGl, { Marker } from "react-map-gl";
 import { useState, useEffect } from 'react';
-import { Grid, Paper, CircularProgress, withStyles } from '@material-ui/core';
+import { Grid, Paper, CircularProgress, withStyles, Typography } from '@material-ui/core';
 import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
-import { convertDMS } from './constants/functions';
+import { convertDMS, GetRequestFunction, unauthorizedLogOut, floatToHoursPlusMinutes } from './constants/functions';
+import AuthApi from '../../../authAPI';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DashboardCharts = () => {
     const classes = useStyles();
+    const Auth = React.useContext(AuthApi);
     const [positionPermision, setPositionPermision] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [yachtPosition, setYachtPosition] = useState(null);
@@ -37,7 +39,45 @@ const DashboardCharts = () => {
         longitude: -4.170343,
         zoom: 9,
     });
+    const [userInfo, setUserInfo] = useState();
+    const [allert, setAllert] = React.useState({
+        open: false,
+        variant: 'filled',
+        duration: 4000,
+        type: 'success',
+        title: 'success',
+        msg: 'success msg',
+    });
+    //user Info useEffect
+    useEffect(()=> {
+        try {
+            //TODO: delete timeout before production
+            setTimeout(() => {
+                GetRequestFunction('/api/user')
+                    .then(response => {
+                        //unauthorized
+                        if (response.error && response.error.code === 401) {
+                            console.log('unauthorized');
+                            setAllert({ ...allert, open: true, type: 'error', title: response.error.code, msg: response.error.msg })
+                            setTimeout(() => {
+                                Auth.setAuth(false);
+                                unauthorizedLogOut();
+                            }, 3000)
+                        } else {
+                            if(response.success){
+                                setUserInfo(response.data)
+                            }else{
+                                setIsLoading(false);
+                                setAllert({ ...allert, open: true, type: 'info', title: 'error: 500', msg: 'it looks that something went wrong maybe try again?' });
+                            }
+                        }
+                    })
+            }, 1000)
+        } catch (error) { console.log(error) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
+    //location useEffect
     useEffect(()=>{
         navigator.geolocation.getCurrentPosition((position) => {
             setGeolocationObject(position)
@@ -56,71 +96,158 @@ const DashboardCharts = () => {
 
 
     return (
-        <Grid className={classes.GridContainer} container spacing={2}
-            justify="flex-start"
-            alignItems="flex-start">
-            <Grid item xs={12} md={4}>
-                <Paper className={classes.paper}>
-                    <p style={{fontSize: '18px'}}>
-                        <span role='img' aria-label="compasIcon">🧭</span>Position: {yachtPosition ? convertDMS(yachtPosition[0], yachtPosition[1]) : " - "}
-                    </p>
-                    <p style={{fontSize: '18px'}}>
-                        <span role='img' aria-label="accuracyIcon">🌊</span>Altitude: {yachtPosition ? Math.round(goalocationObject.coords.altitude) + "m a.s.l" : "- m a.s.l"}
-                    </p>
-                    <p style={{fontSize: '18px'}}>
-                        <span role='img' aria-label="headingIcon">⛵️</span>Heading: {yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
-                    </p>
-                    <p style={{fontSize: '18px'}}>
-                        <span role='img' aria-label="accuracyIcon">🌏</span>Accuracy: {yachtPosition ? goalocationObject.coords.accuracy + "m" : " - "}
-                    </p>
-                </Paper>
+        <>
+            <Grid className={classes.GridContainer} container spacing={2}
+                justify="flex-start"
+                alignItems="flex-start">
+                <Grid item xs={12} md={3}>
+                    <Paper className={classes.paper} style={{ lineHeight: 1.5, whiteSpace: 'inherit'}}>
+                        <Typography variant="overline" style={{fontSize: '16px'}}>current GPS data:</Typography>
+                        <p style={{fontSize: '16px'}}>
+                            <span role='img' aria-label="compasIcon" style={{color: '#f50057', letterSpacing: '2px'}}>🧭Position:</span> {yachtPosition ? convertDMS(yachtPosition[0], yachtPosition[1]) : " - "}
+                        </p>
+                        <p style={{fontSize: '16px'}}>
+                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>🌊Altitude:</span> {yachtPosition ? Math.round(goalocationObject.coords.altitude) + "m a.s.l" : "- m a.s.l"}
+                        </p>
+                        <p style={{fontSize: '16px'}}>
+                            <span role='img' aria-label="headingIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>⛵️Heading: </span>{yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
+                        </p>
+                        <p style={{fontSize: '16px'}}>
+                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>🌏Accuracy:</span> {yachtPosition ? goalocationObject.coords.accuracy + "m" : " - "}
+                        </p>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Paper className={classes.paper} style={{ whiteSpace: 'inherit', lineHeight: 1.5}}>
+                        <Typography variant="overline" style={{ fontSize: '16px' }}>Account stats:</Typography>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}> ⚓️ Miles:</span> {userInfo ? (Math.round(userInfo.milesSailed * 100) / 100).toFixed(2) + "nm" : " - nm"}
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="compasIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>  ⏳ Hours as sea:</span> {userInfo ? floatToHoursPlusMinutes(userInfo.hours) : " - "}
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="headingIcon" style={{ color: '#f50057', letterSpacing: '2px' }}> ⛵️ on sails: </span>{userInfo ? floatToHoursPlusMinutes(userInfo.onSails): " -° "}
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}> 🚤 on Engine:</span> {userInfo ? floatToHoursPlusMinutes(userInfo.onEngine) : " - "}
+                        </p>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.paper} style={{paddingBottom: '.5vw'}}>
+                        <Typography variant="overline" style={{ fontSize: '16px' }}> <span role="img" aria-label="liveIcon">🟢</span>Live weather:</Typography>
+                        {yachtPosition && <LiveWeatcher yachtPosition={yachtPosition} /> }
+                        {isLoading && (
+                            <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+                                <CircularProgress color="black" /><br />
+                                <h5>Loading position...</h5>
+                            </div>
+                        )}
+                        {!positionPermision && !isLoading && (
+                            <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+                                <h5>Ups we can't get your position... <span role='img' aria-label="upsemoji">😱</span></h5>
+                                <h6>You need to let us use your location</h6>
+                            </div>
+                        )}
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+                        <StaticMap
+                            isLoading={isLoading}
+                            viewport={viewport}
+                            yachtPosition={yachtPosition}
+                            positionPermision={positionPermision}
+                        />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
+                        {yachtPosition && (
+                            <iframe
+                                style={{ width: '100%', height: '187px', marginTop: '10px' }}
+                                title="forecast"
+                                src={`https://embed.windy.com/embed2.html?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&zoom=3&level=surface&overlay=wind&menu=&message=&marker=&calendar=&pressure=&type=forecast&location=coordinates&detail=true&detailLat=${yachtPosition[0]}&detailLon=${yachtPosition[1]}&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`}
+                                frameBorder="0">
+                            </iframe>
+                        )}
+                        {isLoading && (
+                            <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
+                                <ColorCircularProgress /><br />
+                                <h5>Loading position...</h5>
+                            </div>
+                        )}
+                        {!positionPermision && !isLoading && (
+                            <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
+                                <h5>Ups we can't get your position... <span role='img' aria-label="upsemoji">😱</span></h5>
+                                <h6>You need to let us use your location</h6>
+                            </div>
+                        )}
+                    </Paper>
+                </Grid>
             </Grid>
-            <Grid item xs={12} md={4}>
-                <Paper className={classes.paper}> current cruise </Paper>
-            </Grid>
-            <Grid item xs={12} md={4}>
-                <Paper className={classes.paper}>map
-                </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-                    <StaticMap
-                        isLoading={isLoading}
-                        viewport={viewport}
-                        yachtPosition={yachtPosition}
-                        positionPermision={positionPermision}
-                    />
-                </Paper>
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
-                    {yachtPosition && (
-                        <iframe
-                            style={{ width: '100%', height: '187px', marginTop: '10px' }}
-                            title="forecast"
-                            src={`https://embed.windy.com/embed2.html?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&zoom=3&level=surface&overlay=wind&menu=&message=&marker=&calendar=&pressure=&type=forecast&location=coordinates&detail=true&detailLat=${yachtPosition[0]}&detailLon=${yachtPosition[1]}&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`}
-                            frameBorder="0">
-                        </iframe>
-                    )}
-                    {isLoading && (
-                        <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
-                            <ColorCircularProgress /><br />
-                            <h5>Loading position...</h5>
-                        </div>
-                    )}
-                    {!positionPermision && !isLoading && (
-                        <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
-                            <h5>Ups we can't get your position... <span role='img' aria-label="upsemoji">😱</span></h5>
-                            <h6>You need to let us use your location</h6>
-                        </div>
-                    )}
-                </Paper>
-            </Grid>
-        </Grid>
+        </>
      );
 }
 
 export default DashboardCharts;
+
+const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
+    const classes = useStyles();
+    const [weather, setWeather] = useState();
+    useEffect(() => {
+        const GetForecast = async () => {
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&units=metric&appid=${process.env.REACT_APP_OPENWEATHER_API_KEY}`;
+            const response = await fetch(url);
+            return response.json();
+        }
+        GetForecast()
+            .then(response => {
+                console.log(response)
+                setWeather(response)
+            })
+            .catch(error => console.log(error))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    return (
+        <>
+        {weather && (
+            <Grid
+                className={classes.GridContainer}
+                container
+                spacing={2}
+                justify="flex-start"
+                alignItems="flex-start"
+                flex-direction="row"
+            >
+                <Grid item xs={6} style={{textAlign: 'center'}}>
+                        <img style={{verticalAlign: "middle"}} src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
+                        <span style={{ fontSize: '24px'}}>{(Math.round(weather.main.temp * 100) / 100).toFixed(1)} °C </span>
+                        <span style={{ fontSize: '14px', color: 'gray', fontStyle: 'italic' }}> ({(Math.round(weather.main.feels_like * 100) / 100).toFixed(1)} °C )</span>
+                </Grid>
+                <Grid item  xs={6}style={{textAlign: 'center'}}>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> ☁️ cloudiness: </span>{weather.clouds.all}%
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="compasIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}>  💨 wind : </span>{weather.wind.speed} m/s, {weather.wind.deg}°
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                            <span role='img' aria-label="headingIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 🕐 pressure: </span>{weather.main.pressure} hPa
+                        </p>
+                        <p style={{ fontSize: '16px' }}>
+                        <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 💧humidity :</span> {weather.main.humidity}%
+                        </p>
+                </Grid>
+            </Grid>
+        )}
+        </>
+    )
+};
+
+
+
 
 
 const StaticMap = ({ isLoading, viewport, yachtPosition, positionPermision}) => {

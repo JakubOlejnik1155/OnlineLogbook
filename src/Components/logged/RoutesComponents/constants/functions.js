@@ -111,3 +111,9 @@ export  const convertDMS = (lat, lng) => {
 
     return latitude + latitudeCardinal + "  " + longitude + longitudeCardinal;
 }
+
+export const floatToHoursPlusMinutes = (number) => {
+    const hour = Math.floor(number);
+    const minutes = number - hour;
+    return hour + "h " + Math.round(60 * minutes) + "min"
+}
