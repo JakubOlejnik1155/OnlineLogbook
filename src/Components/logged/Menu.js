@@ -109,7 +109,7 @@ export default function Menu(props) {
             <Divider/>
             <List>
                 <MenuLink link="/dashboard/settings" text="Account settings"> <SettingsTwoToneIcon /> </MenuLink>
-                <MenuLink link="/dashboard/about" text="About logbook"> <InfoTwoToneIcon /> </MenuLink>
+                <MenuLink link="/about" text="About logbook"> <InfoTwoToneIcon /> </MenuLink>
             </List>
             <Divider/>
             <span style={{ textAlign: 'center', color: 'gray', fontSize: '13px', fontStyle: 'italic', paddingBottom: '3px', paddingTop: '3px'}}> version {process.env.REACT_APP_VERSION}</span>
