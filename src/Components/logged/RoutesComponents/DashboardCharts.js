@@ -204,7 +204,6 @@ const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
         }
         GetForecast()
             .then(response => {
-                console.log(response)
                 setWeather(response)
             })
             .catch(error => console.log(error))
