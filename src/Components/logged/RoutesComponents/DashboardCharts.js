@@ -33,7 +33,7 @@ const DashboardCharts = () => {
     const [goalocationObject, setGeolocationObject] = useState();
     const [viewport, setViewport] = useState({
         width: '100%',
-        height: '300px',
+        height: '395px',
         borderRadius: '5px',
         latitude: 50.268561,
         longitude: -4.170343,
@@ -101,7 +101,7 @@ const DashboardCharts = () => {
                 justify="flex-start"
                 alignItems="flex-start">
                 <Grid item xs={12} md={3}>
-                    <Paper className={classes.paper} style={{ lineHeight: 1.5, whiteSpace: 'inherit'}}>
+                    <Paper className={classes.paper} style={{ lineHeight: 1.5, whiteSpace: 'inherit', marginTop: '0', marginBottom: '0' }}>
                         <Typography variant="overline" style={{fontSize: '16px'}}>current GPS data:</Typography>
                         <p style={{fontSize: '16px'}}>
                             <span role='img' aria-label="compasIcon" style={{color: '#f50057', letterSpacing: '2px'}}>🧭Position:</span> {yachtPosition ? convertDMS(yachtPosition[0], yachtPosition[1]) : " - "}
@@ -118,7 +118,7 @@ const DashboardCharts = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <Paper className={classes.paper} style={{ whiteSpace: 'inherit', lineHeight: 1.5}}>
+                    <Paper className={classes.paper} style={{ whiteSpace: 'inherit', lineHeight: 1.5, marginTop: '0', marginBottom: '0' }}>
                         <Typography variant="overline" style={{ fontSize: '16px' }}>Account stats:</Typography>
                         <p style={{ fontSize: '16px' }}>
                             <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}> ⚓️ Miles:</span> {userInfo ? (Math.round(userInfo.milesSailed * 100) / 100).toFixed(2) + "nm" : " - nm"}
@@ -135,9 +135,9 @@ const DashboardCharts = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper className={classes.paper} style={{paddingBottom: '.5vw'}}>
+                    <Paper className={classes.paper} style={{ paddingBottom: '.5vw', marginTop: '0', marginBottom: '0' }}>
                         <Typography variant="overline" style={{ fontSize: '16px' }}> <span role="img" aria-label="liveIcon">🟢</span>Live weather:</Typography>
-                        {yachtPosition && <LiveWeatcher yachtPosition={yachtPosition} /> }
+                        {yachtPosition && <LiveWeather yachtPosition={yachtPosition} />}
                         {isLoading && (
                             <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
                                 <CircularProgress color="black" /><br />
@@ -153,7 +153,7 @@ const DashboardCharts = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+                    <Paper className={classes.paper} style={{ marginTop: '0', marginBottom: '0' }}>
                         <StaticMap
                             isLoading={isLoading}
                             viewport={viewport}
@@ -163,23 +163,23 @@ const DashboardCharts = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper className={classes.paper} style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)'}}>
+                    <Paper className={classes.paper} style={{marginTop: '0', marginBottom: '0'}}>
                         {yachtPosition && (
                             <iframe
-                                style={{ width: '100%', height: '187px', marginTop: '10px' }}
+                                style={{ width: '100%', height: '378px', marginTop: '10px' }}
                                 title="forecast"
-                                src={`https://embed.windy.com/embed2.html?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&zoom=3&level=surface&overlay=wind&menu=&message=&marker=&calendar=&pressure=&type=forecast&location=coordinates&detail=true&detailLat=${yachtPosition[0]}&detailLon=${yachtPosition[1]}&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`}
+                                    src={`https://embed.windy.com/embed2.html?lat=${yachtPosition[0]}&lon=${yachtPosition[1]}&zoom=5&level=surface&overlay=rain&menu=&message=true&marker=true&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=${yachtPosition[0]}&detailLon=${yachtPosition[1]}&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`}
                                 frameBorder="0">
-                            </iframe>
+                             </iframe>
                         )}
                         {isLoading && (
-                            <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
-                                <ColorCircularProgress /><br />
+                            <div style={{ width: '100%', height: '375px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center'}}>
+                                <CircularProgress color="black"/><br />
                                 <h5>Loading position...</h5>
                             </div>
                         )}
                         {!positionPermision && !isLoading && (
-                            <div style={{ width: '100%', height: '187px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,.75)', color: 'snow' }}>
+                            <div style={{ width: '100%', height: '375px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center',}}>
                                 <h5>Ups we can't get your position... <span role='img' aria-label="upsemoji">😱</span></h5>
                                 <h6>You need to let us use your location</h6>
                             </div>
@@ -193,7 +193,7 @@ const DashboardCharts = () => {
 
 export default DashboardCharts;
 
-const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
+const LiveWeather = ({ yachtPosition }) => {
     const classes = useStyles();
     const [weather, setWeather] = useState();
     useEffect(() => {
@@ -211,7 +211,7 @@ const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
     },[])
     return (
         <>
-        {weather && (
+        {weather ? (
             <Grid
                 className={classes.GridContainer}
                 container
@@ -223,7 +223,6 @@ const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
                 <Grid item xs={6} style={{textAlign: 'center'}}>
                         <img style={{verticalAlign: "middle"}} src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
                         <span style={{ fontSize: '24px'}}>{(Math.round(weather.main.temp * 100) / 100).toFixed(1)} °C </span>
-                        <span style={{ fontSize: '14px', color: 'gray', fontStyle: 'italic' }}> ({(Math.round(weather.main.feels_like * 100) / 100).toFixed(1)} °C )</span>
                 </Grid>
                 <Grid item  xs={6}style={{textAlign: 'center'}}>
                         <p style={{ fontSize: '16px' }}>
@@ -240,14 +239,15 @@ const LiveWeatcher = ({ yachtPosition, positionPermision, isLoading }) => {
                         </p>
                 </Grid>
             </Grid>
+        ):(
+            <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+                <CircularProgress color="black" /><br />
+                <h5>Loading weather...</h5>
+            </div>
         )}
         </>
     )
 };
-
-
-
-
 
 const StaticMap = ({ isLoading, viewport, yachtPosition, positionPermision}) => {
     const classes = useStyles();
@@ -280,7 +280,6 @@ const StaticMap = ({ isLoading, viewport, yachtPosition, positionPermision}) => 
         </ReactMapGl>
     )
 };
-
 
 const ColorCircularProgress = withStyles({
     root: {
