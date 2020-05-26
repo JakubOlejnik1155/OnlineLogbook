@@ -1,8 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMapGl, { Marker } from "react-map-gl";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useState, useEffect } from 'react';
 import { Grid, Paper, CircularProgress, withStyles, Typography } from '@material-ui/core';
+
+
 import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
 import { convertDMS, GetRequestFunction, unauthorizedLogOut, floatToHoursPlusMinutes } from './constants/functions';
 import AuthApi from '../../../authAPI';
@@ -140,7 +143,7 @@ const DashboardCharts = () => {
                         {yachtPosition && <LiveWeather yachtPosition={yachtPosition} />}
                         {isLoading && (
                             <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
-                                <CircularProgress color="black" /><br />
+                                <BlackCircularProgress /><br />
                                 <h5>Loading position...</h5>
                             </div>
                         )}
@@ -174,7 +177,7 @@ const DashboardCharts = () => {
                         )}
                         {isLoading && (
                             <div style={{ width: '100%', height: '375px', marginTop: '10px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center'}}>
-                                <CircularProgress color="black"/><br />
+                                <BlackCircularProgress /><br />
                                 <h5>Loading position...</h5>
                             </div>
                         )}
@@ -194,6 +197,8 @@ const DashboardCharts = () => {
 export default DashboardCharts;
 
 const LiveWeather = ({ yachtPosition }) => {
+
+    const biggerThenXS = useMediaQuery('(min-width:445px)');
     const classes = useStyles();
     const [weather, setWeather] = useState();
     useEffect(() => {
@@ -226,22 +231,22 @@ const LiveWeather = ({ yachtPosition }) => {
                 </Grid>
                 <Grid item  xs={6}style={{textAlign: 'center'}}>
                         <p style={{ fontSize: '16px' }}>
-                            <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> ☁️ cloudiness: </span>{weather.clouds.all}%
+                            <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> ☁️ {biggerThenXS && "cloudiness: "} </span>{weather.clouds.all}%
                         </p>
                         <p style={{ fontSize: '16px' }}>
-                            <span role='img' aria-label="compasIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}>  💨 wind : </span>{weather.wind.speed} m/s, {weather.wind.deg}°
+                            <span role='img' aria-label="compasIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}>  💨 {biggerThenXS && "wind: "}  </span>{weather.wind.speed} m/s, {weather.wind.deg}°
                         </p>
                         <p style={{ fontSize: '16px' }}>
-                            <span role='img' aria-label="headingIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 🕐 pressure: </span>{weather.main.pressure} hPa
+                            <span role='img' aria-label="headingIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 🕐 {biggerThenXS && "pressure: "} </span>{weather.main.pressure} hPa
                         </p>
                         <p style={{ fontSize: '16px' }}>
-                        <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 💧humidity :</span> {weather.main.humidity}%
+                            <span role='img' aria-label="accuracyIcon" style={{ color: 'rgb(1,158,1)', letterSpacing: '2px' }}> 💧{biggerThenXS && "humidity: "} </span> {weather.main.humidity}%
                         </p>
                 </Grid>
             </Grid>
         ):(
             <div style={{ height: '115px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
-                <CircularProgress color="black" /><br />
+                <BlackCircularProgress /><br />
                 <h5>Loading weather...</h5>
             </div>
         )}
@@ -284,5 +289,10 @@ const StaticMap = ({ isLoading, viewport, yachtPosition, positionPermision}) => 
 const ColorCircularProgress = withStyles({
     root: {
         color: 'snow',
+    },
+})(CircularProgress);
+const BlackCircularProgress = withStyles({
+    root: {
+        color: 'black',
     },
 })(CircularProgress);
