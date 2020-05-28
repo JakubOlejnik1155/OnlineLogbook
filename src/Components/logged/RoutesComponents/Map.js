@@ -120,7 +120,7 @@ const Map = ({height, width}) => {
                                             src={centerIcon} alt="centerIcon" width="25" height="25" />
                                     </div>
                                     <span style={{padding: 5, backgroundColor: 'rgba(0, 0, 0, .75)', borderRadius: '6px', color: 'snow'}}>
-                                        <Typography style={{margin: 0, padding: 0}} variant="overline">accuracy: {accuracy/1000}km</Typography>
+                                        <Typography style={{margin: 0, padding: 0}} variant="overline">accuracy: {Math.round(accuracy)}m</Typography>
                                     </span>
                                     </>
                                 )}

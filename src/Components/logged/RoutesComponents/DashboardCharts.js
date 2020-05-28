@@ -116,7 +116,7 @@ const DashboardCharts = () => {
                             <span role='img' aria-label="headingIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>⛵️Heading: </span>{yachtPosition && goalocationObject.coords.heading ? goalocationObject.coords.heading + "°" : " -° "}
                         </p>
                         <p style={{fontSize: '16px'}}>
-                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>🌏Accuracy:</span> {yachtPosition ? goalocationObject.coords.accuracy + "m" : " - "}
+                            <span role='img' aria-label="accuracyIcon" style={{ color: '#f50057', letterSpacing: '2px' }}>🌏Accuracy:</span> {yachtPosition ? Math.round(goalocationObject.coords.accuracy) + "m" : " - "}
                         </p>
                     </Paper>
                 </Grid>
