@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ReactMapGl, { Marker } from "react-map-gl";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useState, useEffect } from 'react';
-import { Grid, Paper, CircularProgress, withStyles, Typography } from '@material-ui/core';
+import { Grid, Paper, CircularProgress, withStyles, Typography, Hidden } from '@material-ui/core';
 
 
 import BoatGpsIcon from '../../../images/gps/sailboat-boat.svg';
@@ -155,6 +155,7 @@ const DashboardCharts = () => {
                         )}
                     </Paper>
                 </Grid>
+                <Hidden smDown>
                 <Grid item xs={12} md={6}>
                     <Paper className={classes.paper} style={{ marginTop: '0', marginBottom: '0' }}>
                         <StaticMap
@@ -165,6 +166,7 @@ const DashboardCharts = () => {
                         />
                     </Paper>
                 </Grid>
+                </Hidden>
                 <Grid item xs={12} md={6}>
                     <Paper className={classes.paper} style={{marginTop: '0', marginBottom: '0'}}>
                         {yachtPosition && (
