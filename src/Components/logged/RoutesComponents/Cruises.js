@@ -71,7 +71,7 @@ const Cruises = () => {
         <>
             <Grid className={classes.GridContainer}
                 container
-                spacing={5}
+                spacing={2}
                 justify="center"
                 alignItems="center"
             >
@@ -79,7 +79,7 @@ const Cruises = () => {
                     {isFormAvaliable === false && <FormDisable disableFormProps={disableFormProps} /> }
                     <Grid className={classes.GridContainer}
                         container
-                        spacing={4}
+                        spacing={2}
                         justify="center"
                         alignItems="center"
                     >
