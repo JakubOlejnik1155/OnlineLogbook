@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 import './style/login/App.scss';
-
+import CookieAllert from './Components/CookieAllert';
 
 
 
@@ -79,6 +79,7 @@ const App =  () => {
         <Provider template={AlertTemplate} {...options}>
             <AuthApi.Provider value={{auth,setAuth}}>
                 <Routes/>
+                <CookieAllert />
             </AuthApi.Provider>
         </Provider>
     );
