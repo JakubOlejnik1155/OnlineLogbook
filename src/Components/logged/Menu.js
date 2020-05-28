@@ -113,6 +113,7 @@ export default function Menu(props) {
             </List>
             <Divider/>
             <span style={{ textAlign: 'center', color: 'gray', fontSize: '13px', fontStyle: 'italic', paddingBottom: '3px', paddingTop: '3px'}}> version {process.env.REACT_APP_VERSION}</span>
+            <span style={{ textAlign: 'center', color: 'gray', fontSize: '11px', fontStyle: 'italic', paddingBottom: '3px', paddingTop: '3px' }}> &#9400; 2020 Jakub Olejnik</span>
         </div>
     );
 
