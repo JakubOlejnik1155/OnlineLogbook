@@ -35,8 +35,6 @@ const FinishDay = () => {
 
     React.useEffect(() => {
         try {
-            //TODO: delete timeout before production
-            setTimeout(() => {
                 GetRequestFunction('/api/days/current')
                     .then(response => {
                         //unauthorized
@@ -63,7 +61,6 @@ const FinishDay = () => {
                             }
                         }
                     })
-            }, 1000)
         } catch (error) { console.log(error) }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

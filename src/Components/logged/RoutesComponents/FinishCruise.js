@@ -32,8 +32,6 @@ const FinishCruise = () => {
 
     React.useEffect( () => {
         try {
-            //TODO: delete timeout before production
-            setTimeout(() => {
                 GetRequestFunction('/api/cruises/current')
                     .then(response => {
                         //unauthorized
@@ -84,7 +82,6 @@ const FinishCruise = () => {
                             }
                         }
                     })
-            }, 1000)
         } catch (error) { console.log(error) }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

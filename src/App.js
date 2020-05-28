@@ -29,7 +29,7 @@ const App =  () => {
 
 
     useEffect(()=>{
-        if (!window.location.href.includes("userValidation")) //NOTE: prevent double notification while userValidationEmail
+        if (!window.location.href.includes("userValidation"))
             readCookie();
     });
 
@@ -54,7 +54,6 @@ const App =  () => {
         return(
             <Route
                 {...rest}
-                //TODO: Change to dashboard
                 render={() => !auth ? <Component /> : <Redirect to="/dashboard"/>}
             />
         )
