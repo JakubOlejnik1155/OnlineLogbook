@@ -226,7 +226,7 @@ const LiveWeather = ({ yachtPosition }) => {
                 flex-direction="row"
             >
                 <Grid item xs={6} style={{textAlign: 'center'}}>
-                        <img style={{verticalAlign: "middle"}} src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
+                        <img style={{verticalAlign: "middle"}} src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
                         <span style={{ fontSize: '24px'}}>{(Math.round(weather.main.temp * 100) / 100).toFixed(1)} °C </span>
                 </Grid>
                 <Grid item  xs={6}style={{textAlign: 'center'}}>
