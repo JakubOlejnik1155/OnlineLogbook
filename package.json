@@ -16,7 +16,7 @@
     "dotenv": "^8.2.0",
     "file-saver": "^2.0.2",
     "js-cookie": "^2.2.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "react": "^16.13.0",
     "react-alert": "^7.0.0",
     "react-alert-template-basic": "^1.0.0",
